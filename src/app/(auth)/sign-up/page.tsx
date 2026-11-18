@@ -32,7 +32,7 @@ export default function SignUpPage() {
       password: data.password as string,
       image: data.profileImage as string,
       role: data.role as 'customer' | 'vendor' | 'admin',
-      
+      callbackURL: '/',
     });
 
     if (error) {
