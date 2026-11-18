@@ -1,33 +1,33 @@
 import Link from "next/link"
-import { ArrowUpRight, LogIn, Search, ShoppingCart } from "lucide-react"
+import { ArrowUpRight, LogIn,  ShoppingCart } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
 const iconButtonStyles =
   "group relative inline-flex size-10 items-center justify-center rounded-full border border-transparent text-[#5f3b2c] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#8d1b1b]/10 hover:bg-white/75 hover:text-[#a4161a] hover:shadow-[0_10px_20px_-14px_rgba(120,53,15,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee]"
 
-type SearchButtonProps = {
-  className?: string
-  onNavigate?: () => void
-}
+// type SearchButtonProps = {
+//   className?: string
+//   onNavigate?: () => void
+// }
 
-export function SearchButton({ className, onNavigate }: SearchButtonProps) {
-  return (
-    <Link
-      href="/search"
-      onClick={onNavigate}
-      aria-label="Search the menu"
-      title="Search the menu"
-      className={cn(iconButtonStyles, className)}
-    >
-      <Search
-        className="size-[18px] transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
-        strokeWidth={2}
-        aria-hidden
-      />
-    </Link>
-  )
-}
+// export function SearchButton({ className, onNavigate }: SearchButtonProps) {
+//   return (
+//     <Link
+//       href="/search"
+//       onClick={onNavigate}
+//       aria-label="Search the menu"
+//       title="Search the menu"
+//       className={cn(iconButtonStyles, className)}
+//     >
+//       <Search
+//         className="size-[18px] transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
+//         strokeWidth={2}
+//         aria-hidden
+//       />
+//     </Link>
+//   )
+// }
 
 type CartButtonProps = {
   cartItemCount: number

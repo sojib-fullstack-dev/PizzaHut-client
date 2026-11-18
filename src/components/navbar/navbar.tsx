@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 import { BrandLogo } from "./brand-logo"
 import { DesktopNav } from "./desktop-nav"
 import { MobileNav } from "./mobile-nav"
-import { AuthButtons, CartButton, SearchButton } from "./nav-actions"
+import { AuthButtons, CartButton} from "./nav-actions"
 
 export type NavbarProps = {
   cartItemCount?: number
@@ -94,10 +94,10 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
           <DesktopNav pathname={pathname} />
 
           <div className="flex items-center gap-0.5 sm:gap-1">
-            <SearchButton
+            {/* <SearchButton
               className="hidden sm:inline-flex"
               onNavigate={closeMenu}
-            />
+            /> */}
             <CartButton
               cartItemCount={cartItemCount}
               onNavigate={closeMenu}

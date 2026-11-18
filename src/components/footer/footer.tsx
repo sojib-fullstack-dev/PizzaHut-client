@@ -229,7 +229,7 @@ export function Footer() {
         {/* Copyright and developer credit */}
         <div className="mt-10 flex flex-col items-center gap-2 border-t border-[#fff8ee]/10 pt-6 text-center sm:mt-12">
           <p className="text-xs text-[#e8cbb8]/60">
-            © {currentYear} PizzaHub. All rights reserved.
+            © {currentYear} PizzaHut. All rights reserved.
           </p>
           <p className="text-xs text-[#e8cbb8]/60">
             Built with <span className="text-[#fb923c]">❤️</span> by{" "}

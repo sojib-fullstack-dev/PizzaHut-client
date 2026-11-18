@@ -52,7 +52,7 @@ export default function SignInPage() {
             <span className="block text-[1.55rem] font-extrabold tracking-[-0.045em] text-[#3d211a]">
               Pizza
               <span className="bg-gradient-to-r from-[#a4161a] to-[#ea580c] bg-clip-text text-transparent">
-                Hub
+                Hut
               </span>
             </span>
             <span className="mt-1.5 block text-[9px] font-semibold uppercase tracking-[0.27em] text-[#a87b62]">
@@ -188,7 +188,7 @@ export default function SignInPage() {
           </button>
 
           <p className="mt-6 text-center text-sm text-[#7a5645]">
-            New to PizzaHub?{" "}
+            New to PizzaHut?{" "}
             <Link
               href="/sign-up"
               className="font-semibold text-[#a4161a] underline-offset-4 transition-colors hover:text-[#ea580c] hover:underline"

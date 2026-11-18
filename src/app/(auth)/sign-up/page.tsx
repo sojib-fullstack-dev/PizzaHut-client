@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import Link from "next/link"
+import Link from 'next/link';
 import {
   ArrowRight,
   Check,
@@ -12,12 +12,36 @@ import {
   Sparkles,
   Store,
   UserRound,
-} from "lucide-react"
+} from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
+import { Bounce, toast } from 'react-toastify';
 
 const inputClass =
-  "h-12 w-full rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] pl-11 pr-4 text-sm font-medium text-[#3d211a] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#b79b8a] focus:border-[#a4161a]/40 focus:bg-white focus:ring-4 focus:ring-[#a4161a]/10"
+  'h-12 w-full rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] pl-11 pr-4 text-sm font-medium text-[#3d211a] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#b79b8a] focus:border-[#a4161a]/40 focus:bg-white focus:ring-4 focus:ring-[#a4161a]/10';
 
 export default function SignUpPage() {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+
+    const { data: SignUpRes, error } = await authClient.signUp.email({
+      name: data.fullName as string,
+      email: data.email as string,
+      password: data.password as string,
+      image: data.profileImage as string,
+      
+      
+    });
+
+    if (error) {
+       toast.error(error.message);
+      return;
+    }
+    toast.success("Sign Up Successful!");
+    console.log(SignUpRes);
+  };
+
   return (
     <main className="relative flex min-h-[calc(100dvh-71px)] items-center justify-center overflow-hidden bg-[#fff8ee] px-4 py-10 sm:min-h-[calc(100dvh-79px)] sm:px-6 sm:py-14">
       {/* Soft background decoration */}
@@ -56,7 +80,7 @@ export default function SignUpPage() {
             <span className="block text-[1.55rem] font-extrabold tracking-[-0.045em] text-[#3d211a]">
               Pizza
               <span className="bg-gradient-to-r from-[#a4161a] to-[#ea580c] bg-clip-text text-transparent">
-                Hub
+                Hut
               </span>
             </span>
             <span className="mt-1.5 block text-[9px] font-semibold uppercase tracking-[0.27em] text-[#a87b62]">
@@ -84,10 +108,7 @@ export default function SignUpPage() {
             Fresh slices, faster checkout, and offers made just for you.
           </p>
 
-          <form
-            onSubmit={(event) => event.preventDefault()}
-            className="mt-6 space-y-4"
-          >
+          <form onSubmit={handleSignUp} className="mt-6 space-y-4">
             {/* Full Name */}
             <div>
               <label
@@ -159,6 +180,9 @@ export default function SignUpPage() {
                   autoComplete="new-password"
                   placeholder="Create a password"
                   aria-describedby="password-requirements"
+                  required
+                  pattern="(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                  title="Use at least 6 characters, including an uppercase and a lowercase letter."
                   className={inputClass}
                 />
               </div>
@@ -199,29 +223,20 @@ export default function SignUpPage() {
                 </span>
               </div>
 
-              <label
-                htmlFor="profileImage"
-                className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed border-[#a4161a]/20 bg-[#fffaf2] px-3.5 py-3 transition-all duration-200 hover:border-[#a4161a]/40 hover:bg-[#fff4e7] focus-within:ring-4 focus-within:ring-[#a4161a]/10"
-              >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#a4161a]/10 text-[#a4161a] transition-all duration-200 group-hover:bg-[#a4161a] group-hover:text-white">
-                  <ImagePlus className="size-[18px]" strokeWidth={2} aria-hidden />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-semibold text-[#3d211a]">
-                    Upload a photo
-                  </span>
-                  <span className="mt-0.5 block text-[11px] text-[#8a6553]">
-                    PNG or JPG · You can skip this
-                  </span>
-                </span>
+              <div className="relative">
+                <ImagePlus
+                  aria-hidden
+                  className="pointer-events-none absolute left-3.5 top-1/2 size-[18px] -translate-y-1/2 text-[#b08d79]"
+                  strokeWidth={2}
+                />
                 <input
                   id="profileImage"
                   name="profileImage"
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
+                  type="url"
+                  placeholder="https://example.com/photo.jpg"
+                  className={inputClass}
                 />
-              </label>
+              </div>
             </div>
 
             {/* Account role */}
@@ -245,7 +260,11 @@ export default function SignUpPage() {
                     className="flex h-full cursor-pointer flex-col gap-2 rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] p-3.5 pr-8 transition-all duration-200 hover:border-[#a4161a]/25 peer-checked:border-[#a4161a]/60 peer-checked:bg-[#fff1e6] peer-focus-visible:ring-4 peer-focus-visible:ring-[#a4161a]/15"
                   >
                     <span className="flex size-9 items-center justify-center rounded-xl bg-[#a4161a]/10 text-[#a4161a]">
-                      <UserRound className="size-[18px]" strokeWidth={2} aria-hidden />
+                      <UserRound
+                        className="size-[18px]"
+                        strokeWidth={2}
+                        aria-hidden
+                      />
                     </span>
                     <span>
                       <span className="block text-sm font-semibold text-[#3d211a]">
@@ -277,7 +296,11 @@ export default function SignUpPage() {
                     className="flex h-full cursor-pointer flex-col gap-2 rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] p-3.5 pr-8 transition-all duration-200 hover:border-[#a4161a]/25 peer-checked:border-[#a4161a]/60 peer-checked:bg-[#fff1e6] peer-focus-visible:ring-4 peer-focus-visible:ring-[#a4161a]/15"
                   >
                     <span className="flex size-9 items-center justify-center rounded-xl bg-[#a4161a]/10 text-[#a4161a]">
-                      <Store className="size-[18px]" strokeWidth={2} aria-hidden />
+                      <Store
+                        className="size-[18px]"
+                        strokeWidth={2}
+                        aria-hidden
+                      />
                     </span>
                     <span>
                       <span className="block text-sm font-semibold text-[#3d211a]">
@@ -352,7 +375,7 @@ export default function SignUpPage() {
           </button>
 
           <p className="mt-6 text-center text-sm text-[#7a5645]">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link
               href="/sign-in"
               className="font-semibold text-[#a4161a] underline-offset-4 transition-colors hover:text-[#ea580c] hover:underline"
@@ -372,5 +395,5 @@ export default function SignUpPage() {
         </p>
       </div>
     </main>
-  )
+  );
 }
