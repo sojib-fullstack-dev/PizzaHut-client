@@ -88,7 +88,7 @@ export function AuthButtons({
       )}
     >
       <Link
-        href="/signin"
+        href="/sign-in"
         onClick={onNavigate}
         className={cn(
           "inline-flex items-center justify-center gap-2 rounded-full font-semibold text-[#5f3b2c] transition-all duration-300 hover:bg-white/65 hover:text-[#a4161a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee]",
@@ -102,7 +102,7 @@ export function AuthButtons({
       </Link>
 
       <Link
-        href="/signup"
+        href="/sign-up"
         onClick={onNavigate}
         className={cn(
           "group relative isolate overflow-hidden rounded-full bg-gradient-to-r from-[#8f1116] via-[#c02a1d] to-[#f2761b] font-semibold text-white shadow-[0_10px_22px_-10px_rgba(164,22,26,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-10px_rgba(194,42,29,0.9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee] active:translate-y-0",
