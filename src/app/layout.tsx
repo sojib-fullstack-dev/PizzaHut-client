@@ -37,7 +37,7 @@ export default function RootLayout({
         <Footer />
         <ToastContainer
           position="top-center"
-          autoClose={4000}
+          autoClose={1500}
           transition={Bounce}
           toastStyle={{
             background: '#fffaf2',
