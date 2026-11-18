@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ArrowRight,
   Check,
@@ -20,13 +21,14 @@ const inputClass =
   'h-12 w-full rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] pl-11 pr-4 text-sm font-medium text-[#3d211a] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#b79b8a] focus:border-[#a4161a]/40 focus:bg-white focus:ring-4 focus:ring-[#a4161a]/10';
 
 export default function SignUpPage() {
+  const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
 
-    const { data: SignUpRes, error } = await authClient.signUp.email({
+    const { error } = await authClient.signUp.email({
       name: data.fullName as string,
       email: data.email as string,
       password: data.password as string,
@@ -40,8 +42,19 @@ export default function SignUpPage() {
       return;
     }
     toast.success("Sign Up Successful!");
-    console.log(data);
+    router.replace('/');
   };
+
+ const handleGoogleSign=async()=>{
+  const data = await authClient.signIn.social({
+    provider: "google",
+  });
+  if(data.error){
+    toast.error('Google SignIn Failed')
+  }
+  toast.success('Google SignIn Success')
+}
+
 
   return (
     <main className="relative flex min-h-[calc(100dvh-71px)] items-center justify-center overflow-hidden bg-[#fff8ee] px-4 py-10 sm:min-h-[calc(100dvh-79px)] sm:px-6 sm:py-14">
@@ -347,6 +360,7 @@ export default function SignUpPage() {
 
           {/* Google button (UI only) */}
           <button
+           onClick={handleGoogleSign}
             type="button"
             className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full border border-[#8d1b1b]/12 bg-white/80 text-sm font-semibold text-[#3d211a] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#a4161a]/25 hover:bg-white hover:shadow-[0_10px_24px_-16px_rgba(120,53,15,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >

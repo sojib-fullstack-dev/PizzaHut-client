@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowRight, Flame, Lock, Mail, Pizza, Sparkles } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'react-toastify';
@@ -9,12 +10,14 @@ const inputClass =
   'h-12 w-full rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] pl-11 pr-4 text-sm font-medium text-[#3d211a] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#b79b8a] focus:border-[#a4161a]/40 focus:bg-white focus:ring-4 focus:ring-[#a4161a]/10';
 
 export default function SignInPage() {
+  const router = useRouter();
+
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
 
-    const { data: SignInRes, error } = await authClient.signIn.email({
+    const { error } = await authClient.signIn.email({
       email: data.email as string,
       password: data.password as string,
       callbackURL: '/',
@@ -23,11 +26,22 @@ export default function SignInPage() {
            toast.error(error.message);
           return;
         }
-        toast.success("Sign Up Successful!");
-        console.log(SignInRes);
+        toast.success("Sign In Successful!");
+        router.replace('/');
 
 
   };
+
+
+   const handleGoogleSign=async()=>{
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+    if(data.error){
+      toast.error('Google SignIn Failed')
+    }
+    toast.success('Google SignIn Success')
+  }
 
   return (
     <main className="relative flex min-h-[calc(100dvh-71px)] items-center justify-center overflow-hidden bg-[#fff8ee] px-4 py-10 sm:min-h-[calc(100dvh-79px)] sm:px-6 sm:py-14">
@@ -171,6 +185,7 @@ export default function SignInPage() {
 
           {/* Google button (UI only) */}
           <button
+          onClick={handleGoogleSign}
             type="button"
             className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full border border-[#8d1b1b]/12 bg-white/80 text-sm font-semibold text-[#3d211a] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#a4161a]/25 hover:bg-white hover:shadow-[0_10px_24px_-16px_rgba(120,53,15,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >

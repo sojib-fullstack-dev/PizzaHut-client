@@ -8,6 +8,7 @@ import {
   BookOpen,
   ChevronRight,
   Home,
+  Loader2,
   LogIn,
   Menu,
   Pizza,
@@ -17,6 +18,8 @@ import {
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { authClient } from "@/lib/auth-client"
+import { ProfileDropdown } from "./profile-dropdown"
 
 const navItems = [
   { label: "Home", href: "/", icon: Home },
@@ -33,11 +36,6 @@ function isActivePath(pathname: string, href: string) {
 }
 
 function BrandLogo({ onNavigate }: { onNavigate: () => void }) {
-    
-
-
-
-
   return (
     <Link
       href="/"
@@ -120,10 +118,32 @@ function CartButton({
 function AuthButtons({
   mobile = false,
   onNavigate,
+  userName,
+  isPending,
 }: {
   mobile?: boolean
   onNavigate: () => void
+  userName?: string
+  isPending: boolean
 }) {
+  if (isPending) {
+    return (
+      <div className={cn("flex items-center justify-center", mobile ? "py-3" : "h-9 w-20")}>
+        <Loader2 className="size-4 animate-spin text-[#ea580c]" />
+      </div>
+    )
+  }
+
+  if (userName) {
+    return (
+      <ProfileDropdown
+        userName={userName}
+        mobile={mobile}
+        onNavigate={onNavigate}
+      />
+    )
+  }
+
   return (
     <div
       className={cn(
@@ -220,10 +240,14 @@ function MobileNav({
   open,
   pathname,
   onClose,
+  userName,
+  isPending,
 }: {
   open: boolean
   pathname: string
   onClose: () => void
+  userName?: string
+  isPending: boolean
 }) {
   return (
     <div
@@ -319,9 +343,16 @@ function MobileNav({
               className="my-3 h-px bg-gradient-to-r from-transparent via-[#a4161a]/15 to-transparent"
             />
 
-            <div className="px-0.5">
-              <AuthButtons mobile onNavigate={onClose} />
-            </div>
+            {!isPending && !userName ? (
+              <div className="px-0.5">
+                <AuthButtons
+                  mobile
+                  onNavigate={onClose}
+                  userName={userName}
+                  isPending={isPending}
+                />
+              </div>
+            ) : null}
 
             <p className="mt-3 text-center text-[9px] font-semibold uppercase tracking-[0.3em] text-[#b08d79]">
               Fresh · Handcrafted · Delivered
@@ -339,6 +370,8 @@ export type NavbarProps = {
 
 export function Navbar({ cartItemCount = 3 }: NavbarProps) {
   const pathname = usePathname() ?? ""
+  const { data: session, isPending } = authClient.useSession()
+  const userName = session?.user.name || session?.user.email
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const closeMenu = () => setIsMenuOpen(false)
@@ -415,12 +448,26 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
 
             <span
               aria-hidden
-              className="mx-1 hidden h-6 w-px bg-gradient-to-b from-transparent via-[#8d1b1b]/20 to-transparent md:block"
+              className="mx-1 hidden h-6 w-px bg-gradient-to-b from-transparent via-[#8d1b1b]/20 to-transparent lg:block"
             />
 
-            <div className="hidden md:block">
-              <AuthButtons onNavigate={closeMenu} />
+            <div className="hidden lg:block">
+              <AuthButtons
+                onNavigate={closeMenu}
+                userName={userName}
+                isPending={isPending}
+              />
             </div>
+
+            {userName && !isPending ? (
+              <div className="lg:hidden">
+                <ProfileDropdown
+                  userName={userName}
+                  mobile
+                  onNavigate={closeMenu}
+                />
+              </div>
+            ) : null}
 
             <button
               type="button"
@@ -473,6 +520,8 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
         open={isMenuOpen}
         pathname={pathname}
         onClose={closeMenu}
+        userName={userName}
+        isPending={isPending}
       />
     </header>
   )
