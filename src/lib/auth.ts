@@ -9,7 +9,16 @@ const db = client.db('PizzaHub-DataBase');
 export const auth = betterAuth({
   emailAndPassword: { 
     enabled: true, 
-  }, socialProviders: {
+  },
+  user: {
+       additionalFields: {
+          role: {
+              type:['customer','vendor','admin'],
+              input: false
+            } 
+        }
+    },
+  socialProviders: {
         google: { 
             clientId: process.env.GOOGLE_CLIENT_ID as string, 
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 

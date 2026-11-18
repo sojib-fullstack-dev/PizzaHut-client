@@ -1,19 +1,34 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import {
-  ArrowRight,
-  Flame,
-  Lock,
-  Mail,
-  Pizza,
-  Sparkles,
-} from "lucide-react"
+import Link from 'next/link';
+import { ArrowRight, Flame, Lock, Mail, Pizza, Sparkles } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
+import { toast } from 'react-toastify';
 
 const inputClass =
-  "h-12 w-full rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] pl-11 pr-4 text-sm font-medium text-[#3d211a] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#b79b8a] focus:border-[#a4161a]/40 focus:bg-white focus:ring-4 focus:ring-[#a4161a]/10"
+  'h-12 w-full rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] pl-11 pr-4 text-sm font-medium text-[#3d211a] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#b79b8a] focus:border-[#a4161a]/40 focus:bg-white focus:ring-4 focus:ring-[#a4161a]/10';
 
 export default function SignInPage() {
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+
+    const { data: SignInRes, error } = await authClient.signIn.email({
+      email: data.email as string,
+      password: data.password as string,
+      callbackURL: '/',
+    });
+        if (error) {
+           toast.error(error.message);
+          return;
+        }
+        toast.success("Sign Up Successful!");
+        console.log(SignInRes);
+
+
+  };
+
   return (
     <main className="relative flex min-h-[calc(100dvh-71px)] items-center justify-center overflow-hidden bg-[#fff8ee] px-4 py-10 sm:min-h-[calc(100dvh-79px)] sm:px-6 sm:py-14">
       {/* Soft background decoration */}
@@ -80,10 +95,7 @@ export default function SignInPage() {
             Sign in to track orders and reorder your favourite slices.
           </p>
 
-          <form
-            onSubmit={(event) => event.preventDefault()}
-            className="mt-6 space-y-4"
-          >
+          <form onSubmit={handleSignIn} className="mt-6 space-y-4">
             {/* Email */}
             <div>
               <label
@@ -188,7 +200,7 @@ export default function SignInPage() {
           </button>
 
           <p className="mt-6 text-center text-sm text-[#7a5645]">
-            New to PizzaHut?{" "}
+            New to PizzaHut?{' '}
             <Link
               href="/sign-up"
               className="font-semibold text-[#a4161a] underline-offset-4 transition-colors hover:text-[#ea580c] hover:underline"
@@ -208,5 +220,5 @@ export default function SignInPage() {
         </p>
       </div>
     </main>
-  )
+  );
 }
