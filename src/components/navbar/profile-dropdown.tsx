@@ -9,25 +9,26 @@ import { toast } from "react-toastify"
 import { authClient } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 
-const profileLinks = [
-  { label: "Browse Menu", href: "/browseMenu" },
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Profile Setting", href: "/profile" },
-]
-
 type ProfileDropdownProps = {
   userName: string
+  dashboardHref: string
   mobile?: boolean
   onNavigate: () => void
 }
 
 export function ProfileDropdown({
   userName,
+  dashboardHref,
   mobile = false,
   onNavigate,
 }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
+  const profileLinks = [
+    { label: "Browse Menu", href: "/browseMenu" },
+    { label: "Dashboard", href: dashboardHref },
+    { label: "Profile Setting", href: "/profile" },
+  ]
 
   const handleSignOut = async () => {
     const { error } = await authClient.signOut()

@@ -21,11 +21,19 @@ import { cn } from "@/lib/utils"
 import { authClient } from "@/lib/auth-client"
 import { ProfileDropdown } from "./profile-dropdown"
 
-const navItems = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "Browse Menu", href: "/browseMenu", icon: BookOpen },
-  { label: "Dashboard", href: "/dashboard", icon: BookOpen },
-]
+function getDashboardHref(role: string | null | undefined) {
+  const dashboardRole =
+    role === "vendor" || role === "admin" ? role : "customer"
+  return `/dashboard/${dashboardRole}`
+}
+
+function getNavItems(dashboardHref: string) {
+  return [
+    { label: "Home", href: "/", icon: Home },
+    { label: "Browse Menu", href: "/browseMenu", icon: BookOpen },
+    { label: "Dashboard", href: dashboardHref, icon: BookOpen },
+  ]
+}
 
 const iconButtonStyles =
   "group relative inline-flex size-10 items-center justify-center rounded-full border border-transparent text-[#5f3b2c] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#8d1b1b]/10 hover:bg-white/75 hover:text-[#a4161a] hover:shadow-[0_10px_20px_-14px_rgba(120,53,15,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee]"
@@ -120,11 +128,13 @@ function AuthButtons({
   onNavigate,
   userName,
   isPending,
+  dashboardHref,
 }: {
   mobile?: boolean
   onNavigate: () => void
   userName?: string
   isPending: boolean
+  dashboardHref: string
 }) {
   if (isPending) {
     return (
@@ -140,6 +150,7 @@ function AuthButtons({
         userName={userName}
         mobile={mobile}
         onNavigate={onNavigate}
+        dashboardHref={dashboardHref}
       />
     )
   }
@@ -198,7 +209,15 @@ function AuthButtons({
   )
 }
 
-function DesktopNav({ pathname }: { pathname: string }) {
+function DesktopNav({
+  pathname,
+  dashboardHref,
+}: {
+  pathname: string
+  dashboardHref: string
+}) {
+  const navItems = getNavItems(dashboardHref)
+
   return (
     <nav
       aria-label="Primary"
@@ -242,13 +261,17 @@ function MobileNav({
   onClose,
   userName,
   isPending,
+  dashboardHref,
 }: {
   open: boolean
   pathname: string
   onClose: () => void
   userName?: string
   isPending: boolean
+  dashboardHref: string
 }) {
+  const navItems = getNavItems(dashboardHref)
+
   return (
     <div
       id="mobile-navigation"
@@ -350,6 +373,7 @@ function MobileNav({
                   onNavigate={onClose}
                   userName={userName}
                   isPending={isPending}
+                  dashboardHref={dashboardHref}
                 />
               </div>
             ) : null}
@@ -372,6 +396,7 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
   const pathname = usePathname() ?? ""
   const { data: session, isPending } = authClient.useSession()
   const userName = session?.user.name || session?.user.email
+  const dashboardHref = getDashboardHref(session?.user.role)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const closeMenu = () => setIsMenuOpen(false)
@@ -441,7 +466,7 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
         <div className="relative mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-3 px-4 sm:h-[76px] sm:gap-4 sm:px-6 lg:px-8">
           <BrandLogo onNavigate={closeMenu} />
 
-          <DesktopNav pathname={pathname} />
+          <DesktopNav pathname={pathname} dashboardHref={dashboardHref} />
 
           <div className="flex items-center gap-0.5 sm:gap-1">
             <CartButton cartItemCount={cartItemCount} onNavigate={closeMenu} />
@@ -456,6 +481,7 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
                 onNavigate={closeMenu}
                 userName={userName}
                 isPending={isPending}
+                dashboardHref={dashboardHref}
               />
             </div>
 
@@ -465,6 +491,7 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
                   userName={userName}
                   mobile
                   onNavigate={closeMenu}
+                  dashboardHref={dashboardHref}
                 />
               </div>
             ) : null}
@@ -522,6 +549,7 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
         onClose={closeMenu}
         userName={userName}
         isPending={isPending}
+        dashboardHref={dashboardHref}
       />
     </header>
   )

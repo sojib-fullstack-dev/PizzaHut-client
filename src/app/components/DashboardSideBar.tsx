@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -30,39 +31,58 @@ import {
   UtensilsCrossed,
   Users,
   Wallet,
+  type LucideIcon,
 } from "lucide-react";
 
+type Role = "customer" | "vendor" | "admin";
+type DashboardMenuItem = {
+  label: string;
+  icon: LucideIcon;
+  url?: string;
+};
+
 // Menu items for each role
-const menuItemsByRole = {
+const menuItemsByRole: Record<Role, DashboardMenuItem[]> = {
   customer: [
-    { label: "Overview", icon: LayoutDashboard },
+    { label: "Overview", url: "/dashboard/customer", icon: LayoutDashboard },
     { label: "My Orders", icon: ShoppingBag },
     { label: "Profile Settings", icon: Settings },
   ],
   vendor: [
-    { label: "Overview", icon: LayoutDashboard },
-    { label: "My Menu Items", icon: UtensilsCrossed },
-    { label: "Add Menu Item", icon: CirclePlus },
+    { label: "Overview", url: "/dashboard/vendor", icon: LayoutDashboard },
+    {
+      label: "My Menu Items",
+      url: "/dashboard/vendor/menu",
+      icon: UtensilsCrossed,
+    },
+    {
+      label: "Add Menu Item",
+      url: "/dashboard/vendor/menu/addmenu",
+      icon: CirclePlus,
+    },
     { label: "Customer Orders", icon: ClipboardList },
     { label: "Subscription", icon: CreditCard },
-    { label: "Profile Settings", icon: Settings },
+    { label: "Profile Settings", url: "/profile", icon: Settings },
   ],
   admin: [
-    { label: "Overview", icon: LayoutDashboard },
+    { label: "Overview", url: "/dashboard/admin", icon: LayoutDashboard },
     { label: "Manage Users", icon: Users },
     { label: "Manage Menu Items", icon: Pizza },
     { label: "Transactions", icon: Wallet },
   ],
 };
 
-type Role = keyof typeof menuItemsByRole;
-
 export function DashboardSideBar() {
   const { data: session, isPending } = useSession();
   const [activeItem, setActiveItem] = useState("Overview");
   const router = useRouter();
+  const pathname = usePathname();
 
-  const role: Role = (session?.user.role as Role) || "customer";
+  const sessionRole = session?.user.role;
+  const role: Role =
+    sessionRole === "vendor" || sessionRole === "admin"
+      ? sessionRole
+      : "customer";
   const menuItems = menuItemsByRole[role];
 
   const userName = session?.user.name || session?.user.email || "Guest";
@@ -113,11 +133,15 @@ export function DashboardSideBar() {
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {menuItems.map((item) => {
-              const isActive = activeItem === item.label;
+              const isActive = item.url
+                ? pathname === item.url
+                : !menuItems.some((menuItem) => menuItem.url === pathname) &&
+                  activeItem === item.label;
 
               return (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
+                    render={item.url ? <Link href={item.url} /> : undefined}
                     isActive={isActive}
                     onClick={() => setActiveItem(item.label)}
                     tooltip={item.label}
