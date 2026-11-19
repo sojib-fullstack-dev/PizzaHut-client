@@ -35,7 +35,16 @@ export function AddMenuForm() {
   // UI only - data will be sent to your server later
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const data= Object.fromEntries(formData.entries())
+      
+      
+      
+
+
+
     toast.success("Menu item form submitted!");
+    console.log(data)
   };
 
   return (
