@@ -1,11 +1,7 @@
-
+import { AddMenuForm } from "@/app/components/AddMenuForm";
 
 const AddMenuItems = () => {
-  return (
-    <div>
-      AddMenuItems
-    </div>
-  );
+  return <AddMenuForm />;
 };
 
 export default AddMenuItems;
