@@ -13,6 +13,8 @@ import {
   Plus,
   Tag,
 } from "lucide-react";
+import { CreateMenuItems, type FromData } from "@/lib/actions/menu";
+import { uploadImage } from "@/lib/uploadImage";
 
 // Same input style as the sign in page (PizzaHut theme)
 const inputClass =
@@ -22,29 +24,57 @@ const labelClass =
   "mb-1.5 block text-[13px] font-semibold text-[#3d211a]";
 
 export function AddMenuForm() {
-  // Only used to show a small preview of the chosen image
+
   const [imagePreview, setImagePreview] = useState("");
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [imageUrl, setImageUrl] = useState("");
+
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setImagePreview(URL.createObjectURL(file));
+
+
+      try {
+        const url = await uploadImage(file);
+        setImageUrl(url);
+
+      } catch {
+        toast.error("Image upload failed!");
+      }
     }
   };
 
-  // UI only - data will be sent to your server later
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit =async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-      const formData = new FormData(event.currentTarget);
-      const data= Object.fromEntries(formData.entries())
-      
-      
-      
 
 
+    if (!imageUrl) {
+      toast.error("Please upload an item image.");
+      return;
+    }
 
+    const formData = new FormData(event.currentTarget);
+
+    const getTextValue = (name: string) => {
+      const value = formData.get(name);
+      return typeof value === "string" ? value : "";
+    };
+
+    const data: FromData = {
+      name: getTextValue("name"),
+      category: getTextValue("category"),
+      description: getTextValue("description"),
+      price: getTextValue("price"),
+      location: getTextValue("location"),
+      image: imageUrl,
+    };
+
+    const result =await CreateMenuItems(data);
+      console.log(result)
     toast.success("Menu item form submitted!");
-    console.log(data)
+    console.log(data);
   };
 
   return (
@@ -223,7 +253,7 @@ export function AddMenuForm() {
               {imagePreview ? "Change item image" : "Click to upload item image"}
             </span>
             <span className="text-xs text-[#a87b62]">
-              PNG or JPG · Required
+              {imageUrl ? "Image uploaded ✓" : "PNG or JPG · Required"}
             </span>
           </label>
 
