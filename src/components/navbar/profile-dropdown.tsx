@@ -1,20 +1,20 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { ChevronDown, LogOut } from "lucide-react"
-import { toast } from "react-toastify"
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ChevronDown, LogOut } from 'lucide-react';
+import { toast } from 'react-toastify';
 
-import { authClient } from "@/lib/auth-client"
-import { cn } from "@/lib/utils"
+import { authClient } from '@/lib/auth-client';
+import { cn } from '@/lib/utils';
 
 type ProfileDropdownProps = {
-  userName: string
-  dashboardHref: string
-  mobile?: boolean
-  onNavigate: () => void
-}
+  userName: string;
+  dashboardHref: string;
+  mobile?: boolean;
+  onNavigate: () => void;
+};
 
 export function ProfileDropdown({
   userName,
@@ -22,27 +22,27 @@ export function ProfileDropdown({
   mobile = false,
   onNavigate,
 }: ProfileDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const profileLinks = [
-    { label: "Browse Menu", href: "/browseMenu" },
-    { label: "Dashboard", href: dashboardHref },
-    { label: "Profile Setting", href: "/profile" },
-  ]
+    { label: 'Browse Menu', href: '/browseMenu' },
+    { label: 'Dashboard', href: dashboardHref },
+    { label: 'Profile Setting', href: '/profile' },
+  ];
 
   const handleSignOut = async () => {
-    const { error } = await authClient.signOut()
+    const { error } = await authClient.signOut();
 
     if (error) {
-      toast.error(error.message)
-      return
+      toast.error(error.message);
+      return;
     }
 
-    toast.success("Signed out successfully")
-    setIsOpen(false)
-    onNavigate()
-    router.replace("/")
-  }
+    toast.success('Signed out successfully');
+    setIsOpen(false);
+    onNavigate();
+    router.replace('/');
+  };
 
   return (
     <div className="flex items-center gap-2">
@@ -53,18 +53,18 @@ export function ProfileDropdown({
           aria-haspopup="menu"
           onClick={() => setIsOpen((open) => !open)}
           className={cn(
-            "flex items-center justify-between gap-2 rounded-full border border-[#a4161a]/15 bg-white/70 font-semibold text-[#5f3b2c] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40",
+            'flex items-center justify-between gap-2 rounded-full border border-[#a4161a]/15 bg-white/70 font-semibold text-[#5f3b2c] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40',
             mobile
-              ? "max-w-32 px-3 py-2.5 text-xs"
-              : "max-w-56 px-3.5 py-2.5 text-[13px]"
+              ? 'max-w-32 px-3 py-2.5 text-xs'
+              : 'max-w-56 px-3.5 py-2.5 text-[13px]'
           )}
         >
           <span className="truncate">{userName}</span>
           <ChevronDown
             aria-hidden
             className={cn(
-              "size-4 shrink-0 transition-transform",
-              isOpen && "rotate-180"
+              'size-4 shrink-0 transition-transform',
+              isOpen && 'rotate-180'
             )}
           />
         </button>
@@ -80,8 +80,8 @@ export function ProfileDropdown({
                 href={item.href}
                 role="menuitem"
                 onClick={() => {
-                  setIsOpen(false)
-                  onNavigate()
+                  setIsOpen(false);
+                  onNavigate();
                 }}
                 className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#5f3b2c] transition-colors hover:bg-[#a4161a]/[0.06] hover:text-[#a4161a]"
               >
@@ -117,5 +117,5 @@ export function ProfileDropdown({
         </button>
       ) : null}
     </div>
-  )
+  );
 }

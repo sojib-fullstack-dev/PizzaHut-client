@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/navbar/navbar';
 import { Footer } from '@/components/Footer/footer';
+import { SavedItemsProvider } from '@/components/saved-items/saved-items-provider';
 import { Bounce, ToastContainer } from 'react-toastify';
 
 const geistSans = Geist({
@@ -32,22 +33,24 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-screen flex flex-col bg-background text-foreground">
-        <Navbar />
-        <main className="flex-1 flex flex-col">{children}</main>
-        <Footer />
-        <ToastContainer
-          position="top-center"
-          autoClose={1500}
-          transition={Bounce}
-          toastStyle={{
-            background: '#fffaf2',
-            color: '#3d211a',
-            border: '1px solid rgba(164, 22, 26, 0.25)',
-            borderRadius: '16px',
-            fontWeight: '600',
-            boxShadow: '0 12px 24px -10px rgba(143, 17, 22, 0.25)',
-          }}
-        />
+        <SavedItemsProvider>
+          <Navbar />
+          <main className="flex-1 flex flex-col">{children}</main>
+          <Footer />
+          <ToastContainer
+            position="top-center"
+            autoClose={1500}
+            transition={Bounce}
+            toastStyle={{
+              background: '#fffaf2',
+              color: '#3d211a',
+              border: '1px solid rgba(164, 22, 26, 0.25)',
+              borderRadius: '16px',
+              fontWeight: '600',
+              boxShadow: '0 12px 24px -10px rgba(143, 17, 22, 0.25)',
+            }}
+          />
+        </SavedItemsProvider>
       </body>
     </html>
   );

@@ -1,10 +1,11 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   ArrowUpRight,
+  Bookmark,
   BookOpen,
   ChevronRight,
   Home,
@@ -12,35 +13,35 @@ import {
   LogIn,
   Menu,
   Pizza,
-  ShoppingCart,
   Sparkles,
   X,
-} from "lucide-react"
+} from 'lucide-react';
 
-import { cn } from "@/lib/utils"
-import { authClient } from "@/lib/auth-client"
-import { ProfileDropdown } from "./profile-dropdown"
+import { cn } from '@/lib/utils';
+import { authClient } from '@/lib/auth-client';
+import { useSavedItems } from '@/components/saved-items/saved-items-provider';
+import { ProfileDropdown } from './profile-dropdown';
 
 function getDashboardHref(role: string | null | undefined) {
   const dashboardRole =
-    role === "vendor" || role === "admin" ? role : "customer"
-  return `/dashboard/${dashboardRole}`
+    role === 'vendor' || role === 'admin' ? role : 'customer';
+  return `/dashboard/${dashboardRole}`;
 }
 
 function getNavItems(dashboardHref: string) {
   return [
-    { label: "Home", href: "/", icon: Home },
-    { label: "Browse Menu", href: "/browseMenu", icon: BookOpen },
-    { label: "Dashboard", href: dashboardHref, icon: BookOpen },
-  ]
+    { label: 'Home', href: '/', icon: Home },
+    { label: 'Browse Menu', href: '/browseMenu', icon: BookOpen },
+    { label: 'Dashboard', href: dashboardHref, icon: BookOpen },
+  ];
 }
 
 const iconButtonStyles =
-  "group relative inline-flex size-10 items-center justify-center rounded-full border border-transparent text-[#5f3b2c] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#8d1b1b]/10 hover:bg-white/75 hover:text-[#a4161a] hover:shadow-[0_10px_20px_-14px_rgba(120,53,15,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee]"
+  'group relative inline-flex size-10 items-center justify-center rounded-full border border-transparent text-[#5f3b2c] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#8d1b1b]/10 hover:bg-white/75 hover:text-[#a4161a] hover:shadow-[0_10px_20px_-14px_rgba(120,53,15,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee]';
 
 function isActivePath(pathname: string, href: string) {
-  if (href === "/") return pathname === "/"
-  return pathname === href || pathname.startsWith(`${href}/`)
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 function BrandLogo({ onNavigate }: { onNavigate: () => void }) {
@@ -84,34 +85,34 @@ function BrandLogo({ onNavigate }: { onNavigate: () => void }) {
         </span>
       </span>
     </Link>
-  )
+  );
 }
 
-function CartButton({
-  cartItemCount,
+function SavedItemsButton({
   onNavigate,
 }: {
-  cartItemCount: number
-  onNavigate: () => void
+  onNavigate: () => void;
 }) {
-  const displayCount = cartItemCount > 9 ? "9+" : cartItemCount
+  const { items } = useSavedItems();
+  const savedCount = items.length;
+  const displayCount = savedCount > 9 ? '9+' : savedCount;
 
   return (
     <Link
-      href="/cart"
+      href="/saved"
       onClick={onNavigate}
-      aria-label={`Shopping cart, ${cartItemCount} ${
-        cartItemCount === 1 ? "item" : "items"
+      aria-label={`Saved items, ${savedCount} ${
+        savedCount === 1 ? 'item' : 'items'
       }`}
-      title="View your cart"
+      title="View saved items"
       className={cn(iconButtonStyles)}
     >
-      <ShoppingCart
+      <Bookmark
         className="size-[18px] transition-transform duration-300 group-hover:-rotate-6"
         strokeWidth={2}
         aria-hidden
       />
-      {cartItemCount > 0 ? (
+      {savedCount > 0 ? (
         <span
           aria-hidden
           className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-[#a4161a] to-[#f97316] px-1 text-[9.5px] font-bold leading-none text-white shadow-[0_4px_10px_-2px_rgba(164,22,26,0.65)] ring-2 ring-[#fff8ee] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110"
@@ -120,7 +121,7 @@ function CartButton({
         </span>
       ) : null}
     </Link>
-  )
+  );
 }
 
 function AuthButtons({
@@ -130,18 +131,23 @@ function AuthButtons({
   isPending,
   dashboardHref,
 }: {
-  mobile?: boolean
-  onNavigate: () => void
-  userName?: string
-  isPending: boolean
-  dashboardHref: string
+  mobile?: boolean;
+  onNavigate: () => void;
+  userName?: string;
+  isPending: boolean;
+  dashboardHref: string;
 }) {
   if (isPending) {
     return (
-      <div className={cn("flex items-center justify-center", mobile ? "py-3" : "h-9 w-20")}>
+      <div
+        className={cn(
+          'flex items-center justify-center',
+          mobile ? 'py-3' : 'h-9 w-20'
+        )}
+      >
         <Loader2 className="size-4 animate-spin text-[#ea580c]" />
       </div>
-    )
+    );
   }
 
   if (userName) {
@@ -152,27 +158,29 @@ function AuthButtons({
         onNavigate={onNavigate}
         dashboardHref={dashboardHref}
       />
-    )
+    );
   }
 
   return (
     <div
       className={cn(
-        "flex",
-        mobile ? "flex-col items-stretch gap-2.5" : "items-center gap-1"
+        'flex',
+        mobile ? 'flex-col items-stretch gap-2.5' : 'items-center gap-1'
       )}
     >
       <Link
         href="/sign-in"
         onClick={onNavigate}
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-full font-semibold text-[#5f3b2c] transition-all duration-300 hover:bg-white/65 hover:text-[#a4161a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee]",
+          'inline-flex items-center justify-center gap-2 rounded-full font-semibold text-[#5f3b2c] transition-all duration-300 hover:bg-white/65 hover:text-[#a4161a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee]',
           mobile
-            ? "border border-[#a4161a]/15 bg-white/60 px-5 py-3 text-sm shadow-[0_8px_20px_-18px_rgba(120,25,20,0.5)] hover:border-[#a4161a]/25 hover:bg-white hover:shadow-[0_10px_24px_-18px_rgba(120,25,20,0.5)]"
-            : "px-3.5 py-2 text-[13px]"
+            ? 'border border-[#a4161a]/15 bg-white/60 px-5 py-3 text-sm shadow-[0_8px_20px_-18px_rgba(120,25,20,0.5)] hover:border-[#a4161a]/25 hover:bg-white hover:shadow-[0_10px_24px_-18px_rgba(120,25,20,0.5)]'
+            : 'px-3.5 py-2 text-[13px]'
         )}
       >
-        {mobile ? <LogIn className="size-4" strokeWidth={2} aria-hidden /> : null}
+        {mobile ? (
+          <LogIn className="size-4" strokeWidth={2} aria-hidden />
+        ) : null}
         Sign In
       </Link>
 
@@ -180,8 +188,8 @@ function AuthButtons({
         href="/sign-up"
         onClick={onNavigate}
         className={cn(
-          "group relative isolate overflow-hidden rounded-full bg-gradient-to-r from-[#8f1116] via-[#c02a1d] to-[#f2761b] font-semibold text-white shadow-[0_10px_22px_-10px_rgba(164,22,26,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-10px_rgba(194,42,29,0.9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee] active:translate-y-0",
-          mobile ? "px-5 py-3 text-sm" : "px-5 py-2.5 text-[13px]"
+          'group relative isolate overflow-hidden rounded-full bg-gradient-to-r from-[#8f1116] via-[#c02a1d] to-[#f2761b] font-semibold text-white shadow-[0_10px_22px_-10px_rgba(164,22,26,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-10px_rgba(194,42,29,0.9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee] active:translate-y-0',
+          mobile ? 'px-5 py-3 text-sm' : 'px-5 py-2.5 text-[13px]'
         )}
       >
         <span
@@ -206,17 +214,17 @@ function AuthButtons({
         </span>
       </Link>
     </div>
-  )
+  );
 }
 
 function DesktopNav({
   pathname,
   dashboardHref,
 }: {
-  pathname: string
-  dashboardHref: string
+  pathname: string;
+  dashboardHref: string;
 }) {
-  const navItems = getNavItems(dashboardHref)
+  const navItems = getNavItems(dashboardHref);
 
   return (
     <nav
@@ -224,35 +232,35 @@ function DesktopNav({
       className="hidden items-center gap-0.5 rounded-full border border-[#8d1b1b]/10 bg-white/40 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_14px_30px_-26px_rgba(80,20,10,0.55)] backdrop-blur-sm lg:flex xl:gap-1"
     >
       {navItems.map((item) => {
-        const active = isActivePath(pathname, item.href)
+        const active = isActivePath(pathname, item.href);
 
         return (
           <Link
             key={item.href}
             href={item.href}
-            aria-current={active ? "page" : undefined}
+            aria-current={active ? 'page' : undefined}
             className={cn(
-              "group relative inline-flex items-center justify-center rounded-full px-3 py-2 text-[12.5px] font-semibold tracking-[0.01em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee] xl:px-4 xl:text-[13px]",
+              'group relative inline-flex items-center justify-center rounded-full px-3 py-2 text-[12.5px] font-semibold tracking-[0.01em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee] xl:px-4 xl:text-[13px]',
               active
-                ? "bg-white/80 text-[#8f151b] shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_8px_18px_-14px_rgba(120,25,20,0.6)] ring-1 ring-[#a4161a]/10"
-                : "text-[#6b4635] hover:bg-white/55 hover:text-[#a4161a]"
+                ? 'bg-white/80 text-[#8f151b] shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_8px_18px_-14px_rgba(120,25,20,0.6)] ring-1 ring-[#a4161a]/10'
+                : 'text-[#6b4635] hover:bg-white/55 hover:text-[#a4161a]'
             )}
           >
             {item.label}
             <span
               aria-hidden
               className={cn(
-                "pointer-events-none absolute bottom-[3px] left-1/2 h-[2.5px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#a4161a] via-[#e2501f] to-[#f59e0b] transition-all duration-300",
+                'pointer-events-none absolute bottom-[3px] left-1/2 h-[2.5px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#a4161a] via-[#e2501f] to-[#f59e0b] transition-all duration-300',
                 active
-                  ? "w-6 opacity-100 shadow-[0_0_10px_rgba(226,80,31,0.55)]"
-                  : "w-0 opacity-0 group-hover:w-3 group-hover:opacity-50"
+                  ? 'w-6 opacity-100 shadow-[0_0_10px_rgba(226,80,31,0.55)]'
+                  : 'w-0 opacity-0 group-hover:w-3 group-hover:opacity-50'
               )}
             />
           </Link>
-        )
+        );
       })}
     </nav>
-  )
+  );
 }
 
 function MobileNav({
@@ -263,14 +271,14 @@ function MobileNav({
   isPending,
   dashboardHref,
 }: {
-  open: boolean
-  pathname: string
-  onClose: () => void
-  userName?: string
-  isPending: boolean
-  dashboardHref: string
+  open: boolean;
+  pathname: string;
+  onClose: () => void;
+  userName?: string;
+  isPending: boolean;
+  dashboardHref: string;
 }) {
-  const navItems = getNavItems(dashboardHref)
+  const navItems = getNavItems(dashboardHref);
 
   return (
     <div
@@ -281,10 +289,10 @@ function MobileNav({
       <div
         inert={!open}
         className={cn(
-          "grid overflow-hidden px-3 pt-2 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-4",
+          'grid overflow-hidden px-3 pt-2 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-4',
           open
-            ? "grid-rows-[1fr] opacity-100"
-            : "pointer-events-none grid-rows-[0fr] opacity-0"
+            ? 'grid-rows-[1fr] opacity-100'
+            : 'pointer-events-none grid-rows-[0fr] opacity-0'
         )}
       >
         <div className="min-h-0">
@@ -296,39 +304,39 @@ function MobileNav({
 
             <nav aria-label="Mobile primary" className="flex flex-col gap-0.5">
               {navItems.map((item, index) => {
-                const active = isActivePath(pathname, item.href)
-                const Icon = item.icon
+                const active = isActivePath(pathname, item.href);
+                const Icon = item.icon;
 
                 return (
                   <div
                     key={item.href}
                     style={{
-                      transitionDelay: open ? `${80 + index * 45}ms` : "0ms",
+                      transitionDelay: open ? `${80 + index * 45}ms` : '0ms',
                     }}
                     className={cn(
-                      "transition-all duration-300 ease-out",
+                      'transition-all duration-300 ease-out',
                       open
-                        ? "translate-y-0 opacity-100"
-                        : "-translate-y-1 opacity-0"
+                        ? 'translate-y-0 opacity-100'
+                        : '-translate-y-1 opacity-0'
                     )}
                   >
                     <Link
                       href={item.href}
                       onClick={onClose}
-                      aria-current={active ? "page" : undefined}
+                      aria-current={active ? 'page' : undefined}
                       className={cn(
-                        "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-inset",
+                        'group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-inset',
                         active
-                          ? "bg-gradient-to-r from-[#a4161a]/10 to-[#f59e0b]/10 text-[#8f151b] ring-1 ring-[#a4161a]/10 ring-inset"
-                          : "text-[#5a3a2c] hover:bg-[#a4161a]/[0.05] hover:text-[#a4161a]"
+                          ? 'bg-gradient-to-r from-[#a4161a]/10 to-[#f59e0b]/10 text-[#8f151b] ring-1 ring-[#a4161a]/10 ring-inset'
+                          : 'text-[#5a3a2c] hover:bg-[#a4161a]/[0.05] hover:text-[#a4161a]'
                       )}
                     >
                       <span
                         className={cn(
-                          "flex size-10 shrink-0 items-center justify-center rounded-[14px] transition-colors duration-300",
+                          'flex size-10 shrink-0 items-center justify-center rounded-[14px] transition-colors duration-300',
                           active
-                            ? "bg-gradient-to-br from-[#a4161a] to-[#ea580c] text-white shadow-[0_8px_18px_-10px_rgba(164,22,26,0.8)]"
-                            : "bg-[#a4161a]/[0.06] text-[#a4161a] group-hover:bg-[#a4161a]/10"
+                            ? 'bg-gradient-to-br from-[#a4161a] to-[#ea580c] text-white shadow-[0_8px_18px_-10px_rgba(164,22,26,0.8)]'
+                            : 'bg-[#a4161a]/[0.06] text-[#a4161a] group-hover:bg-[#a4161a]/10'
                         )}
                       >
                         <Icon
@@ -349,15 +357,15 @@ function MobileNav({
 
                       <ChevronRight
                         className={cn(
-                          "size-4 text-[#b08d79] transition-transform duration-300 group-hover:translate-x-0.5",
-                          active && "text-[#a4161a]"
+                          'size-4 text-[#b08d79] transition-transform duration-300 group-hover:translate-x-0.5',
+                          active && 'text-[#a4161a]'
                         )}
                         strokeWidth={2}
                         aria-hidden
                       />
                     </Link>
                   </div>
-                )
+                );
               })}
             </nav>
 
@@ -385,68 +393,64 @@ function MobileNav({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export type NavbarProps = {
-  cartItemCount?: number
-}
-
-export function Navbar({ cartItemCount = 3 }: NavbarProps) {
-  const pathname = usePathname() ?? ""
-  const { data: session, isPending } = authClient.useSession()
-  const userName = session?.user.name || session?.user.email
-  const dashboardHref = getDashboardHref(session?.user.role)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const closeMenu = () => setIsMenuOpen(false)
+export function Navbar() {
+  const pathname = usePathname() ?? '';
+  const { data: session, isPending } = authClient.useSession();
+  const userName = session?.user.name || session?.user.email;
+  const dashboardHref = getDashboardHref(session?.user.role);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const closeMenu = () => setIsMenuOpen(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 8)
+    const handleScroll = () => setIsScrolled(window.scrollY > 8);
 
-    handleScroll()
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
-    if (!isMenuOpen) return
+    if (!isMenuOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeMenu()
-    }
+      if (event.key === 'Escape') closeMenu();
+    };
 
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [isMenuOpen])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMenuOpen]);
 
   useEffect(() => {
-    if (!isMenuOpen) return
+    if (!isMenuOpen) return;
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = "hidden"
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = previousOverflow
-    }
-  }, [isMenuOpen])
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
-    const desktopQuery = window.matchMedia("(min-width: 1024px)")
+    const desktopQuery = window.matchMedia('(min-width: 1024px)');
     const handleResize = (event: MediaQueryListEvent) => {
-      if (event.matches) closeMenu()
-    }
+      if (event.matches) closeMenu();
+    };
 
-    desktopQuery.addEventListener("change", handleResize)
-    return () => desktopQuery.removeEventListener("change", handleResize)
-  }, [])
+    desktopQuery.addEventListener('change', handleResize);
+    return () => desktopQuery.removeEventListener('change', handleResize);
+  }, []);
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-[background-color,box-shadow,backdrop-filter] duration-300",
+        'sticky top-0 z-50 w-full transition-[background-color,box-shadow,backdrop-filter] duration-300',
         isScrolled
-          ? "bg-[#fff8ee]/95 shadow-[0_20px_45px_-34px_rgba(80,20,10,0.6)] backdrop-blur-xl"
-          : "bg-[#fff8ee]/90 shadow-[0_1px_0_rgba(141,27,27,0.04)] backdrop-blur-lg"
+          ? 'bg-[#fff8ee]/95 shadow-[0_20px_45px_-34px_rgba(80,20,10,0.6)] backdrop-blur-xl'
+          : 'bg-[#fff8ee]/90 shadow-[0_1px_0_rgba(141,27,27,0.04)] backdrop-blur-lg'
       )}
     >
       <div
@@ -469,7 +473,7 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
           <DesktopNav pathname={pathname} dashboardHref={dashboardHref} />
 
           <div className="flex items-center gap-0.5 sm:gap-1">
-            <CartButton cartItemCount={cartItemCount} onNavigate={closeMenu} />
+            <SavedItemsButton onNavigate={closeMenu} />
 
             <span
               aria-hidden
@@ -502,32 +506,32 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation"
               aria-label={
-                isMenuOpen ? "Close navigation menu" : "Open navigation menu"
+                isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
               }
               className={cn(
-                "group relative ml-0.5 inline-flex size-10 items-center justify-center rounded-full border transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee] lg:hidden",
+                'group relative ml-0.5 inline-flex size-10 items-center justify-center rounded-full border transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ee] lg:hidden',
                 isMenuOpen
-                  ? "border-[#a4161a]/15 bg-[#a4161a]/[0.07] text-[#a4161a]"
-                  : "border-[#8d1b1b]/10 bg-white/50 text-[#5f3b2c] hover:border-[#a4161a]/20 hover:bg-white/80 hover:text-[#a4161a] hover:shadow-[0_8px_18px_-14px_rgba(120,53,15,0.7)]"
+                  ? 'border-[#a4161a]/15 bg-[#a4161a]/[0.07] text-[#a4161a]'
+                  : 'border-[#8d1b1b]/10 bg-white/50 text-[#5f3b2c] hover:border-[#a4161a]/20 hover:bg-white/80 hover:text-[#a4161a] hover:shadow-[0_8px_18px_-14px_rgba(120,53,15,0.7)]'
               )}
             >
               <span className="relative size-5">
                 <Menu
                   className={cn(
-                    "absolute inset-0 size-5 transition-all duration-300",
+                    'absolute inset-0 size-5 transition-all duration-300',
                     isMenuOpen
-                      ? "rotate-90 scale-75 opacity-0"
-                      : "rotate-0 scale-100 opacity-100"
+                      ? 'rotate-90 scale-75 opacity-0'
+                      : 'rotate-0 scale-100 opacity-100'
                   )}
                   strokeWidth={2}
                   aria-hidden
                 />
                 <X
                   className={cn(
-                    "absolute inset-0 size-5 transition-all duration-300",
+                    'absolute inset-0 size-5 transition-all duration-300',
                     isMenuOpen
-                      ? "rotate-0 scale-100 opacity-100"
-                      : "-rotate-90 scale-75 opacity-0"
+                      ? 'rotate-0 scale-100 opacity-100'
+                      : '-rotate-90 scale-75 opacity-0'
                   )}
                   strokeWidth={2}
                   aria-hidden
@@ -552,5 +556,5 @@ export function Navbar({ cartItemCount = 3 }: NavbarProps) {
         dashboardHref={dashboardHref}
       />
     </header>
-  )
+  );
 }
