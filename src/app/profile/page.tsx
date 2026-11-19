@@ -6,6 +6,7 @@ import { ArrowRight, Flame, Mail, Pizza, Sparkles, UserRound } from "lucide-reac
 import { toast } from "react-toastify"
 
 import { authClient } from "@/lib/auth-client"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const inputClass =
   "h-12 w-full rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] pl-11 pr-4 text-sm font-medium text-[#3d211a] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#b79b8a] focus:border-[#a4161a]/40 focus:bg-white focus:ring-4 focus:ring-[#a4161a]/10"
@@ -113,6 +114,28 @@ export default function ProfilePage() {
             </div>
           ) : (
             <div className="mt-6 space-y-4">
+              <div className="flex items-center gap-3 rounded-2xl border border-[#a4161a]/10 bg-[#fffaf2] p-3">
+                <Avatar className="size-12 shrink-0 ring-2 ring-[#ea580c]/40">
+                  {session.user.image ? (
+                    <AvatarImage src={session.user.image} alt={session.user.name} />
+                  ) : null}
+                  <AvatarFallback className="bg-[#a4161a] text-sm font-bold text-white">
+                    {(session.user.name || session.user.email)
+                      .split(" ")[0]
+                      .charAt(0)
+                      .toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-[#3d211a]">
+                    {session.user.name}
+                  </p>
+                  <p className="truncate text-xs text-[#7a5645]">
+                    {session.user.email}
+                  </p>
+                </div>
+              </div>
+
               <div>
                 <label
                   htmlFor="email"

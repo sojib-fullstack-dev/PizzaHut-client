@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Mail, MapPin, Phone, Pizza, Sparkles } from "lucide-react"
+import { usePathname } from "next/navigation"
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -19,6 +20,12 @@ export function Footer() {
     const updateYear = () => setCurrentYear(new Date().getFullYear())
     updateYear()
   }, [])
+
+  // Dashboard pages e footer dekhabe na
+  const pathname = usePathname() ?? ""
+  if (pathname.startsWith("/dashboard")) {
+    return null
+  }
 
   return (
     <footer className="relative overflow-hidden bg-[#2b100d] text-[#fff8ee]">
