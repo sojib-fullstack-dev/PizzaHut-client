@@ -21,11 +21,17 @@ export const CreateMenuItems = async (data: FromData) => {
   return res.json();
 };
 
+
+
 // Menu items load korar jonno (GET)
-export const GetMenuItems = async () => {
-  const res = await fetch(`${BASE_URL}/menus`);
+export const GetMenuItems = async (queryString= "" ) => {
+  const res = await fetch(`${BASE_URL}/menus?${queryString }`);
   return res.json();
 };
+
+
+
+
 
 // Ekta menu item er details (GET - view er jonno)
 export const GetMenuItem = async (id: string) => {

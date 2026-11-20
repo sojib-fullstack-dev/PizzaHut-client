@@ -1,32 +1,34 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { Flame, LoaderCircle, Pizza } from "lucide-react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Flame, LoaderCircle, Pizza, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { MenuCard } from "@/app/components/MenuCard";
+import { MenuFilters } from "@/app/components/MenuFilters";
 import type { MenuItem } from "@/app/components/MenuItemCard";
 import { GetMenuItems } from "@/lib/actions/menu";
 
+// Client-side content where filters and searchParams work
+function BrowseMenuContent() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
-const BrowseMenuPages = () => {
+  // Search & Filter states (initialized from URL)
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [category, setCategory] = useState(searchParams.get("category") || "");
+  const [location, setLocation] = useState(searchParams.get("location") || "");
 
-
-
-
-
-
-
-
-  
   const [items, setItems] = useState<MenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-
-  const loadItems = useCallback(async () => {
+  // Backend theke menu items load kora queryString shoho
+  const loadItems = useCallback(async (queryString = "") => {
     try {
-      const data = await GetMenuItems();
+      setIsLoading(true);
+      const data = await GetMenuItems(queryString);
       if (!Array.isArray(data)) {
         throw new Error("Menu response was not a list.");
       }
@@ -41,17 +43,44 @@ const BrowseMenuPages = () => {
     }
   }, []);
 
+  // Filter ba search change hole URL update ebong backend theke data fetch hobe
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void loadItems();
-  }, [loadItems]);
+    const params = new URLSearchParams();
+    if (search.trim()) params.set("search", search.trim());
+    if (category) params.set("category", category);
+    if (location.trim()) params.set("location", location.trim());
+
+    const queryString = params.toString();
+
+    // URL sync without full reload
+    const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+    window.history.replaceState(null, "", newUrl);
+
+    // 300ms debounce typing er jonno
+    const timer = setTimeout(() => {
+      void loadItems(queryString);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search, category, location, pathname, loadItems]);
+
+  // Reset filters
+  const handleReset = () => {
+    setSearch("");
+    setCategory("");
+    setLocation("");
+  };
 
   // Retry button
   const handleRetry = () => {
-    setIsLoading(true);
-    setHasError(false);
-    void loadItems();
+    const params = new URLSearchParams();
+    if (search.trim()) params.set("search", search.trim());
+    if (category) params.set("category", category);
+    if (location.trim()) params.set("location", location.trim());
+    void loadItems(params.toString());
   };
+
+  const hasActiveFilters = Boolean(search || category || location);
 
   return (
     <div className="min-h-screen bg-[#fffaf2]">
@@ -80,6 +109,17 @@ const BrowseMenuPages = () => {
           </p>
         </motion.div>
 
+        {/* Search by name, filter by category & location */}
+        <MenuFilters
+          search={search}
+          onSearchChange={setSearch}
+          category={category}
+          onCategoryChange={setCategory}
+          location={location}
+          onLocationChange={setLocation}
+          onReset={handleReset}
+        />
+
         {isLoading ? (
           // Loading state
           <div className="flex flex-col items-center justify-center gap-3 py-24">
@@ -104,12 +144,27 @@ const BrowseMenuPages = () => {
             </button>
           </div>
         ) : items.length === 0 ? (
-          // Empty state - kono item nai
+          // Empty state - kono item match na korle
           <div className="rounded-3xl border-2 border-dashed border-[#a4161a]/20 bg-white px-6 py-14 text-center">
             <Pizza className="mx-auto size-10 text-[#a4161a]/50" aria-hidden />
             <h2 className="mt-3 text-lg font-bold text-[#3d211a]">
-              No menu items yet
+              {hasActiveFilters ? "No matching menu items found" : "No menu items yet"}
             </h2>
+            <p className="mt-1 text-sm text-[#7a5645]">
+              {hasActiveFilters
+                ? "Try searching for a different keyword, category, or location."
+                : "Please check back soon!"}
+            </p>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={handleReset}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#a4161a] px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[#8f1116]"
+              >
+                <RotateCcw className="size-3.5" />
+                Clear all filters
+              </button>
+            )}
           </div>
         ) : (
           // Menu item cards with smooth staggered animation
@@ -129,6 +184,24 @@ const BrowseMenuPages = () => {
         )}
       </div>
     </div>
+  );
+}
+
+// Next.js best-practice: Wrap the client searchParams reader in Suspense
+const BrowseMenuPages = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#fffaf2] flex items-center justify-center py-24">
+          <LoaderCircle
+            className="size-9 animate-spin text-[#a4161a]"
+            aria-hidden
+          />
+        </div>
+      }
+    >
+      <BrowseMenuContent />
+    </Suspense>
   );
 };
 
