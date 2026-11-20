@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 
 type ProfileDropdownProps = {
   userName: string;
+  role?: string;
   dashboardHref: string;
   mobile?: boolean;
   onNavigate: () => void;
@@ -18,6 +19,7 @@ type ProfileDropdownProps = {
 
 export function ProfileDropdown({
   userName,
+  role,  
   dashboardHref,
   mobile = false,
   onNavigate,
@@ -53,18 +55,28 @@ export function ProfileDropdown({
           aria-haspopup="menu"
           onClick={() => setIsOpen((open) => !open)}
           className={cn(
-            'flex items-center justify-between gap-2 rounded-full border border-[#a4161a]/15 bg-white/70 font-semibold text-[#5f3b2c] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40',
+            'flex items-center justify-between gap-2.5 rounded-full border border-[#a4161a]/15 bg-white/70 font-semibold text-[#5f3b2c] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a4161a]/40',
             mobile
-              ? 'max-w-32 px-3 py-2.5 text-xs'
-              : 'max-w-56 px-3.5 py-2.5 text-[13px]'
+              ? 'max-w-36 px-3 py-1.5 text-xs'
+              : 'max-w-60 px-3.5 py-1.5 text-[13px]'
           )}
         >
-          {/* Onek chotto screen e naam load komay, overflow bondho kore */}
-          <span className="truncate max-[374px]:hidden">{userName}</span>
+          {/* User Name and small Role underneath */}
+          <div className="flex flex-col text-left truncate min-w-0 leading-tight">
+            <span className="truncate font-semibold text-[#3d211a] max-[374px]:hidden">
+              {userName}
+            </span>
+            {role ? (
+              <span className="text-[10px] font-medium capitalize text-[#a87b62]">
+                {role}
+              </span>
+            ) : null}
+          </div>
+
           <ChevronDown
             aria-hidden
             className={cn(
-              'size-4 shrink-0 transition-transform',
+              'size-4 shrink-0 transition-transform text-[#a87b62]',
               isOpen && 'rotate-180'
             )}
           />
@@ -75,6 +87,16 @@ export function ProfileDropdown({
             role="menu"
             className="absolute right-0 z-50 mt-2 w-56 rounded-2xl border border-[#8d1b1b]/10 bg-[#fffaf2] p-2 shadow-[0_18px_40px_-18px_rgba(80,20,10,0.45)]"
           >
+            {/* User name & role info inside dropdown */}
+            <div className="border-b border-[#8d1b1b]/10 px-3 py-2 mb-1">
+              <p className="truncate text-xs font-bold text-[#3d211a]">{userName}</p>
+              {role ? (
+                <span className="mt-0.5 inline-block rounded-full bg-[#a4161a]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#a4161a]">
+                  {role}
+                </span>
+              ) : null}
+            </div>
+
             {profileLinks.map((item) => (
               <Link
                 key={item.href}

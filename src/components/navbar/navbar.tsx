@@ -28,12 +28,18 @@ function getDashboardHref(role: string | null | undefined) {
   return `/dashboard/${dashboardRole}`;
 }
 
-function getNavItems(dashboardHref: string) {
-  return [
+function getNavItems(dashboardHref: string, isLoggedIn: boolean = false) {
+  const items = [
     { label: 'Home', href: '/', icon: Home },
     { label: 'Browse Menu', href: '/browseMenu', icon: BookOpen },
-    { label: 'Dashboard', href: dashboardHref, icon: BookOpen },
   ];
+
+  // User login thakle shudhu Dashboard link add hobe
+  if (isLoggedIn) {
+    items.push({ label: 'Dashboard', href: dashboardHref, icon: BookOpen });
+  }
+
+  return items;
 }
 
 const iconButtonStyles =
@@ -130,12 +136,14 @@ function AuthButtons({
   userName,
   isPending,
   dashboardHref,
+  role,
 }: {
   mobile?: boolean;
   onNavigate: () => void;
   userName?: string;
   isPending: boolean;
   dashboardHref: string;
+  role?: string;
 }) {
   if (isPending) {
     return (
@@ -154,6 +162,7 @@ function AuthButtons({
     return (
       <ProfileDropdown
         userName={userName}
+        role={role}
         mobile={mobile}
         onNavigate={onNavigate}
         dashboardHref={dashboardHref}
@@ -220,11 +229,13 @@ function AuthButtons({
 function DesktopNav({
   pathname,
   dashboardHref,
+  isLoggedIn,
 }: {
   pathname: string;
   dashboardHref: string;
+  isLoggedIn: boolean;
 }) {
-  const navItems = getNavItems(dashboardHref);
+  const navItems = getNavItems(dashboardHref, isLoggedIn);
 
   return (
     <nav
@@ -270,6 +281,7 @@ function MobileNav({
   userName,
   isPending,
   dashboardHref,
+  isLoggedIn,
 }: {
   open: boolean;
   pathname: string;
@@ -277,8 +289,9 @@ function MobileNav({
   userName?: string;
   isPending: boolean;
   dashboardHref: string;
+  isLoggedIn: boolean;
 }) {
-  const navItems = getNavItems(dashboardHref);
+  const navItems = getNavItems(dashboardHref, isLoggedIn);
 
   return (
     <div
@@ -400,7 +413,9 @@ export function Navbar() {
   const pathname = usePathname() ?? '';
   const { data: session, isPending } = authClient.useSession();
   const userName = session?.user.name || session?.user.email;
-  const dashboardHref = getDashboardHref(session?.user.role);
+  const userRole = session?.user.role as string | undefined;
+  const dashboardHref = getDashboardHref(userRole);
+  const isLoggedIn = Boolean(!isPending && session?.user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
@@ -470,7 +485,11 @@ export function Navbar() {
         <div className="relative mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-3 px-4 sm:h-[76px] sm:gap-4 sm:px-6 lg:px-8">
           <BrandLogo onNavigate={closeMenu} />
 
-          <DesktopNav pathname={pathname} dashboardHref={dashboardHref} />
+          <DesktopNav
+            pathname={pathname}
+            dashboardHref={dashboardHref}
+            isLoggedIn={isLoggedIn}
+          />
 
           <div className="flex items-center gap-0.5 sm:gap-1">
             <SavedItemsButton onNavigate={closeMenu} />
@@ -486,6 +505,7 @@ export function Navbar() {
                 userName={userName}
                 isPending={isPending}
                 dashboardHref={dashboardHref}
+                role={userRole}
               />
             </div>
 
@@ -493,6 +513,7 @@ export function Navbar() {
               <div className="lg:hidden">
                 <ProfileDropdown
                   userName={userName}
+                  role={userRole}
                   mobile
                   onNavigate={closeMenu}
                   dashboardHref={dashboardHref}
@@ -554,6 +575,7 @@ export function Navbar() {
         userName={userName}
         isPending={isPending}
         dashboardHref={dashboardHref}
+        isLoggedIn={isLoggedIn}
       />
     </header>
   );
