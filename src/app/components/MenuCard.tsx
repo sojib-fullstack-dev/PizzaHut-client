@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Bookmark, BookmarkCheck, MapPin, Pizza } from "lucide-react";
+import Link from "next/link";
+import { Bookmark, BookmarkCheck, Eye, MapPin, Pizza } from "lucide-react";
 import { useSavedItems } from "@/components/saved-items/saved-items-provider";
 import type { MenuItem } from "./MenuItemCard";
 
@@ -64,6 +65,15 @@ export function MenuCard({ item }: { item: MenuItem }) {
             {item.location}
           </span>
         </div>
+
+        {/* View Details button - click korle dynamic details page e jay */}
+        <Link
+          href={`/browseMenu/${item._id}`}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-[#a4161a]/30 bg-white px-4 py-2.5 text-sm font-semibold text-[#a4161a] transition-colors hover:bg-[#a4161a] hover:text-white"
+        >
+          <Eye className="size-4" aria-hidden />
+          View Details
+        </Link>
       </div>
     </article>
   );

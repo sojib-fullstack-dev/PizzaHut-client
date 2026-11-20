@@ -23,16 +23,16 @@ const inputClass =
 const labelClass = "mb-1.5 block text-[13px] font-semibold text-[#3d211a]";
 
 type Props = {
-  item: MenuItem; // Je item edit hobe
-  onClose: () => void; // Modal bondho korbe
-  onSaved: (updated: MenuItem) => void; // Save er por page ke janabe
+  item: MenuItem;
+  onClose: () => void; 
+  onSaved: (updated: MenuItem) => void; 
 };
 
-// Edit button e click korle ei form khole - database te update kore
+
 export function MenuItemEdit({ item, onClose, onSaved }: Props) {
   const [saving, setSaving] = useState(false);
 
-  // Form submit korle database e PUT request jay
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -49,14 +49,14 @@ export function MenuItemEdit({ item, onClose, onSaved }: Props) {
       description: getTextValue("description"),
       price: getTextValue("price"),
       location: getTextValue("location"),
-      image: item.image, // Image change hocche na, puran ta i thakbe
+      image: item.image, 
     };
 
     setSaving(true);
     try {
       await UpdateMenuItem(item._id, data);
       toast.success("Item updated!");
-      onSaved({ ...item, ...data }); // Notun data diye list update
+      onSaved({ ...item, ...data }); 
     } catch {
       toast.error("Update failed!");
     } finally {
@@ -207,7 +207,7 @@ export function MenuItemEdit({ item, onClose, onSaved }: Props) {
             </div>
           </div>
 
-          {/* Current image (change hocche na) */}
+
           <div>
             <p className={labelClass}>Item Image</p>
             <div className="flex items-center gap-3 rounded-2xl border border-[#8d1b1b]/10 bg-[#fff8ee] p-3">

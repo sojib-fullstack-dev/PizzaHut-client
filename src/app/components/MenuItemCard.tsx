@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Eye, MapPin, Pencil, Pizza, Trash2 } from "lucide-react";
 
-// Menu item er shob information
+
 export type MenuItem = {
   _id: string;
   name: string;
@@ -12,10 +12,10 @@ export type MenuItem = {
   price: string;
   location: string;
   image: string;
-  status?: string; // Backend e ekhono status field nei, pore add hobe
+  status?: string;
 };
 
-// Status onujayi badge er color
+
 const statusColors: Record<string, string> = {
   Pending: "border-amber-300 bg-amber-100 text-amber-700",
   Approved: "border-green-300 bg-green-100 text-green-700",
@@ -52,7 +52,7 @@ export function MenuItemCard({
   onDelete,
   onStatusChange,
 }: Props) {
-  // Jodi DB te status na thake, tahole "Pending" dekhabe
+
   const status = item.status || "Pending";
   const isActive = status === "Active";
 
@@ -63,7 +63,7 @@ export function MenuItemCard({
 
   return (
     <div className="overflow-hidden rounded-3xl border border-[#8d1b1b]/10 bg-white shadow-[0_20px_50px_-35px_rgba(80,20,10,0.5)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_60px_-35px_rgba(80,20,10,0.6)]">
-      {/* Item image + status badge */}
+  
       <div className="relative h-44 w-full bg-[#fff8ee]">
         {item.image ? (
           <Image
@@ -80,7 +80,7 @@ export function MenuItemCard({
           </div>
         )}
 
-        {/* Status badge - upore dan kone */}
+
         <span
           className={`absolute right-3 top-3 rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${
             statusColors[status] || statusColors.Pending
@@ -90,7 +90,7 @@ export function MenuItemCard({
         </span>
       </div>
 
-      {/* Item information */}
+
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <h3 className="truncate text-base font-extrabold text-[#3d211a]">
@@ -115,7 +115,7 @@ export function MenuItemCard({
           </span>
         </div>
 
-        {/* ===== Action buttons - shob alada component e jay ===== */}
+
         <div className="mt-4 flex flex-wrap gap-2">
           <button
             type="button"

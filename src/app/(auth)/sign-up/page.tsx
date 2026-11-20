@@ -15,7 +15,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
-import { Bounce, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const inputClass =
   'h-12 w-full rounded-2xl border border-[#8d1b1b]/12 bg-[#fffaf2] pl-11 pr-4 text-sm font-medium text-[#3d211a] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#b79b8a] focus:border-[#a4161a]/40 focus:bg-white focus:ring-4 focus:ring-[#a4161a]/10';

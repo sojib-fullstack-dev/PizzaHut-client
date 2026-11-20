@@ -8,13 +8,12 @@ import { DeleteMenuItem } from "@/lib/actions/menu";
 import type { MenuItem } from "./MenuItemCard";
 
 type Props = {
-  item: MenuItem; // Je item delete hobe
-  onClose: () => void; // Modal bondho korbe
-  onDeleted: (id: string) => void; // Delete er por page ke janabe
+  item: MenuItem; 
+  onClose: () => void; 
+  onDeleted: (id: string) => void; 
 };
 
-// Delete button e click korle ei confirm window khole
-// OK press korle database theke muiye jay
+
 export function MenuItemDelete({ item, onClose, onDeleted }: Props) {
   const [deleting, setDeleting] = useState(false);
 
@@ -23,7 +22,7 @@ export function MenuItemDelete({ item, onClose, onDeleted }: Props) {
     try {
       await DeleteMenuItem(item._id);
       toast.success("Item deleted!");
-      onDeleted(item._id); // List theke soriye de
+      onDeleted(item._id); 
     } catch {
       toast.error("Delete failed!");
     } finally {
@@ -40,7 +39,7 @@ export function MenuItemDelete({ item, onClose, onDeleted }: Props) {
         onClick={(event) => event.stopPropagation()}
         className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"
       >
-        {/* Lal icon */}
+  
         <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-red-50 text-red-600">
           <Trash2 className="size-6" aria-hidden />
         </span>

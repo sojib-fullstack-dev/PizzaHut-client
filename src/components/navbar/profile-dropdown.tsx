@@ -59,7 +59,8 @@ export function ProfileDropdown({
               : 'max-w-56 px-3.5 py-2.5 text-[13px]'
           )}
         >
-          <span className="truncate">{userName}</span>
+          {/* Onek chotto screen e naam load komay, overflow bondho kore */}
+          <span className="truncate max-[374px]:hidden">{userName}</span>
           <ChevronDown
             aria-hidden
             className={cn(

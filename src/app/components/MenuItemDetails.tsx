@@ -9,16 +9,16 @@ import { GetMenuItem } from "@/lib/actions/menu";
 import type { MenuItem } from "./MenuItemCard";
 
 type Props = {
-  itemId: string; // Kono item er id
-  onClose: () => void; // Modal bondho korbe
+  itemId: string; 
+  onClose: () => void; 
 };
 
-// View button e click korle ei component khole - database theke details ane
+
 export function MenuItemDetails({ itemId, onClose }: Props) {
   const [item, setItem] = useState<MenuItem | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Details API theke data load
+
   useEffect(() => {
     const loadDetails = async () => {
       try {
@@ -43,7 +43,7 @@ export function MenuItemDetails({ itemId, onClose }: Props) {
         onClick={(event) => event.stopPropagation()}
         className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl"
       >
-        {/* Shururow: title + close button */}
+
         <div className="flex items-start justify-between gap-3">
           <h2 className="text-xl font-extrabold text-[#3d211a]">
             Item Details
@@ -70,7 +70,7 @@ export function MenuItemDetails({ itemId, onClose }: Props) {
             </p>
           </div>
         ) : !item || !item._id ? (
-          // Item pawa jay nai
+    
           <p className="py-14 text-center text-sm text-[#7a5645]">
             Item not found.
           </p>
@@ -97,7 +97,7 @@ export function MenuItemDetails({ itemId, onClose }: Props) {
               {item.name}
             </h3>
 
-            {/* Chhoto chhoto information */}
+   
             <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
               <div className="rounded-xl bg-[#fff8ee] p-3">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#a87b62]">

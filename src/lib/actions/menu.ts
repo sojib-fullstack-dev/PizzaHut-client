@@ -33,10 +33,10 @@ export const GetMenuItem = async (id: string) => {
   return res.json();
 };
 
-// Menu item update korar jonno (PUT - edit er jonno)
+// Menu item update korar jonno (PATCH - server e patch api ache)
 export const UpdateMenuItem = async (id: string, data: FromData) => {
   const res = await fetch(`${BASE_URL}/menus/${id}`, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'content-type': 'application/json',
     },

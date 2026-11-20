@@ -48,7 +48,7 @@ export function HeroSection() {
 
           <div className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start">
             <Link
-              href="/menu"
+              href="/browseMenu"
               className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#8f1116] via-[#a4161a] to-[#c2410c] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_14px_28px_-14px_rgba(164,22,26,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-14px_rgba(194,65,12,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b]/50 active:translate-y-0"
             >
               Explore Pizza Menu
