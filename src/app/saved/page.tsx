@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bookmark, Pizza } from "lucide-react";
+import { ArrowLeft, Bookmark, Pizza } from "lucide-react";
 import { MenuCard } from "@/app/components/MenuCard";
 import { useSavedItems } from "@/components/saved-items/saved-items-provider";
 
@@ -11,13 +11,20 @@ export default function SavedItemsPage() {
   return (
     <section className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-6">
-        <h1 className="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-[#3d211a] sm:text-3xl">
+        <h1 className="flex items-center gap-2 text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#8f1116] via-[#a4161a] to-[#ea580c] bg-clip-text text-transparent sm:text-3xl">
           <Bookmark className="size-7 text-[#a4161a]" aria-hidden />
           Saved Items
         </h1>
         <p className="mt-1 text-sm text-[#7a5645]">
           Your favorite menu items are saved here.
         </p>
+                    <Link
+              href="/browseMenu"
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#a4161a] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#8f1116]"
+            >
+              <ArrowLeft className="size-4" aria-hidden />
+              Back to Menu
+            </Link>
       </div>
 
       {!isLoaded ? (

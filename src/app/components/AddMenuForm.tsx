@@ -140,13 +140,13 @@ export function AddMenuForm() {
               className={`${inputClass} appearance-none pr-10`}
             >
               <option value="" disabled>
-                Select category
+                Classic Pizzas
               </option>
-              <option value="pizza">Pizza</option>
-              <option value="sides">Sides</option>
-              <option value="drinks">Drinks</option>
-              <option value="desserts">Desserts</option>
-              <option value="offers">Offers</option>
+              <option value="pizza">Vegetarian Pizzas</option>
+              <option value="sides">Meat Lovers</option>
+              <option value="drinks">Specialty / Gourmet Pizzas</option>
+              <option value="desserts">Sides & Appetizers</option>
+              <option value="offers">Beverages & Desserts</option>
             </select>
             <ChevronDown
               aria-hidden
