@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, LoaderCircle, MapPin, Pizza, ShoppingBag } from "lucide-react";
@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 
 import { GetMenuItem } from "@/lib/actions/menu";
 import type { MenuItem } from "./MenuItemCard";
+import { useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 type Props = {
   itemId: string;
@@ -20,6 +22,8 @@ export function MenuDetails({ itemId }: Props) {
   const [hasError, setHasError] = useState(false);
   const [reload, setReload] = useState(0); 
 
+        const router=useRouter()
+  
   useEffect(() => {
     const loadDetails = async () => {
       try {
@@ -47,11 +51,41 @@ export function MenuDetails({ itemId }: Props) {
 
 
 
+const { data: session } = useSession();
+const user = session?.user as { id?: string; role?: string } | undefined;
+
+const handleOrderNow = () => {
+
+  if (!user) {
+    toast.info("Please sign in as a customer to place an order.");
+    router.push("/sign-in");
+    return;
+  }
+
+
+  if (user.role === "admin") {
+    toast.error("Admins are not allowed to place customer orders.");
+    return;
+  }
+
+
+  if (user.role === "vendor") {
+    toast.error("Vendors cannot place food orders. Please use a customer account.");
+    return;
+  }
+
+  toast.success("Proceeding to your order!");
+
+      console.log(handleOrderNow)
+
+
+
+};
 
 
 
 
-  
+
   // Loading state
   if (isLoading) {
     return (
@@ -195,6 +229,7 @@ export function MenuDetails({ itemId }: Props) {
 
             {/* Order Now -*/}
             <button
+              onClick={handleOrderNow}
               type="button"
               className="group mt-6 flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#a4161a] via-[#c9301f] to-[#ea580c] px-8 py-4 text-base font-bold text-white shadow-[0_18px_35px_-15px_rgba(164,22,26,0.75)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-15px_rgba(234,88,12,0.75)] active:translate-y-0"
             >
