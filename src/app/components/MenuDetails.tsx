@@ -1,16 +1,23 @@
-"use client";
+'use client';
 
-import { use, useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, LoaderCircle, MapPin, Pizza, ShoppingBag } from "lucide-react";
-import { motion } from "framer-motion";
-import { toast } from "react-toastify";
+import { use, useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import {
+  ArrowLeft,
+  LoaderCircle,
+  MapPin,
+  Pizza,
+  ShoppingBag,
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 
-import { GetMenuItem } from "@/lib/actions/menu";
-import type { MenuItem } from "./MenuItemCard";
-import { useSession } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { GetMenuItem } from '@/lib/actions/menu';
+import type { MenuItem } from './MenuItemCard';
+import { useSession } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
+import { createOrder, OrderData } from '@/lib/actions/createOrder';
 
 type Props = {
   itemId: string;
@@ -20,10 +27,10 @@ export function MenuDetails({ itemId }: Props) {
   const [item, setItem] = useState<MenuItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [reload, setReload] = useState(0); 
+  const [reload, setReload] = useState(0);
 
-        const router=useRouter()
-  
+  const router = useRouter();
+
   useEffect(() => {
     const loadDetails = async () => {
       try {
@@ -31,9 +38,9 @@ export function MenuDetails({ itemId }: Props) {
         setItem(data);
         setHasError(false);
       } catch (error) {
-        console.error("Could not load item details.", error);
+        console.error('Could not load item details.', error);
         setHasError(true);
-        toast.error("Could not load item details.");
+        toast.error('Could not load item details.');
       } finally {
         setIsLoading(false);
       }
@@ -49,42 +56,50 @@ export function MenuDetails({ itemId }: Props) {
     setReload((count) => count + 1);
   };
 
+  const { data: session } = useSession();
+  const user = session?.user as
+    | { id?: string; role?: string; name: string; email: string }
+    | undefined;
 
-
-const { data: session } = useSession();
-const user = session?.user as { id?: string; role?: string } | undefined;
-
-const handleOrderNow = () => {
-
-  if (!user) {
-    toast.info("Please sign in as a customer to place an order.");
-    router.push("/sign-in");
+const handleOrderNow = async () => {
+  const currentUser = user 
+  
+  if (!currentUser) {
+    toast.info('Please sign in as a customer to place an order.');
+    router.push('/sign-in');
     return;
   }
 
-
-  if (user.role === "admin") {
-    toast.error("Admins are not allowed to place customer orders.");
+  if (currentUser.role === 'admin') {
+    toast.error('Admins are not allowed to place customer orders.');
     return;
   }
 
-
-  if (user.role === "vendor") {
-    toast.error("Vendors cannot place food orders. Please use a customer account.");
+  if (currentUser.role === 'vendor') {
+    toast.error(
+      'Vendors cannot place food orders. Please use a customer account.'
+    );
     return;
   }
 
-  toast.success("Proceeding to your order!");
+  if (currentUser.role !== 'customer') {
+    toast.error('Only customers can place orders.');
+    return;
+  }
 
-      console.log(handleOrderNow)
-
-
-
+const orderData: OrderData = {
+  itemId: item?._id || itemId,
+  itemName: item?.name,
+  price: item?.price,
+  customerId: currentUser.id,
+  customerName: currentUser.name,
+  customerEmail: currentUser.email,
 };
 
-
-
-
+  const result = await createOrder(orderData);
+  console.log('Order response:', result);
+  toast.success('Order placed successfully!');
+};
 
   // Loading state
   if (isLoading) {

@@ -1,5 +1,4 @@
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+const BASE_URL =process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
 
 export type FromData = {
   name: string;
@@ -10,6 +9,8 @@ export type FromData = {
   image: string;
 };
 
+
+// add items
 export const CreateMenuItems = async (data: FromData) => {
   const res = await fetch(`${BASE_URL}/menus`, {
     method: 'POST',
@@ -28,9 +29,6 @@ export const GetMenuItems = async (queryString= "" ) => {
   const res = await fetch(`${BASE_URL}/menus?${queryString }`);
   return res.json();
 };
-
-
-
 
 
 // Ekta menu item er details (GET - view er jonno)
@@ -58,3 +56,5 @@ export const DeleteMenuItem = async (id: string) => {
   });
   return res.json();
 };
+
+
