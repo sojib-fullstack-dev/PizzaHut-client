@@ -8,14 +8,14 @@ export type OrderData = {
   customerId?: string;
   customerName?: string;
   customerEmail?: string;
-  vendorId?: string; // menu item e jodi vendor info thake
+  vendorId?: string; 
   vendorName?: string;
   vendorEmail?: string;
   deliveryDate?: string;
   deliveryAddress?: string;
   message?: string;
-  status?: string; // Pending / Accepted / Rejected / Cancelled
-  createdAt?: string; // order koykhon placed hoise
+  status?: string; 
+  createdAt?: string;
 };
 
 

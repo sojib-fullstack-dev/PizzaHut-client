@@ -61,4 +61,22 @@ export const DeleteMenuItem = async (id: string) => {
   return res.json();
 };
 
+// Featured items load - shudhu Active item, maximum 6 ta (home section)
+export const GetFeaturedMenuItems = async () => {
+  const res = await fetch(`${BASE_URL}/menus/featured`);
+  return res.json();
+};
+
+// Menu item er status update (Pending / Approved / Active / Inactive ...)
+export const UpdateMenuStatus = async (id: string, status: string) => {
+  const res = await fetch(`${BASE_URL}/menus/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  });
+  return res.json();
+};
+
 

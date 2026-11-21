@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
-import { GetMenuItems } from "@/lib/actions/menu";
+import { GetMenuItems, UpdateMenuStatus } from "@/lib/actions/menu";
 import { MenuItemCard, type MenuItem } from "@/app/components/MenuItemCard";
 import { MenuItemDetails } from "@/app/components/MenuItemDetails";
 import { MenuItemEdit } from "@/app/components/MenuItemEdit";
@@ -66,12 +66,38 @@ const MenuItemsPages = () => {
     setDeleteItem(null);
   };
 
-  // Status badalbe (Active / Inactive) - ekhono local, backend API pore add hobe
-  const handleStatusChange = (id: string, newStatus: string) => {
-    setItems((previous) =>
-      previous.map((i) => (i._id === id ? { ...i, status: newStatus } : i))
-    );
-    toast.success(`Item marked as ${newStatus}!`);
+  // Status badalbe (Active / Inactive) - ekhon backend PATCH API te jay
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    const current = items.find((i) => i._id === id);
+
+    // Rule: Active hote gele age admin "Approved" korte hobe
+    // (na hole item featured section e jabe na)
+    if (
+      newStatus === "Active" &&
+      current?.status !== "Approved" &&
+      current?.status !== "Active"
+    ) {
+      toast.error("Admin approval pending - can't activate yet.");
+      return;
+    }
+
+    try {
+      const result = await UpdateMenuStatus(id, newStatus);
+
+      // Server jodi reject kore (invalid status etc)
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      // Backend e save hole local list o update
+      setItems((previous) =>
+        previous.map((i) => (i._id === id ? { ...i, status: newStatus } : i))
+      );
+      toast.success(`Item marked as ${newStatus}!`);
+    } catch {
+      toast.error("Could not update status.");
+    }
   };
 
   // ========== Better Auth check ==========
