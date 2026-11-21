@@ -6,7 +6,7 @@ import { LoaderCircle, ShieldCheck, Users } from "lucide-react";
 import { toast } from "react-toastify";
 
 import { authClient } from "@/lib/auth-client";
-import { userBolokUnbolock } from "@/lib/action/userBolokUnbolock";
+import { userBolokUnbolock } from "@/lib/actions/userBlockUnbolock";
 import { UserSearchFilterBar } from "./components/UserSearchFilterBar";
 import { UserTable, type AppUser } from "./components/UserTable";
 

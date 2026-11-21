@@ -26,6 +26,8 @@ export default function SignInPage() {
            toast.error(error.message);
           return;
         }
+
+        
         toast.success("Sign In Successful!");
         router.replace('/');
 
