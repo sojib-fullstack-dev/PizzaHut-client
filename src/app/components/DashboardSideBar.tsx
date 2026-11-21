@@ -60,7 +60,7 @@ const menuItemsByRole: Record<Role, DashboardMenuItem[]> = {
       url: "/dashboard/vendor/menu/addmenu",
       icon: CirclePlus,
     },
-    { label: "Customer Orders", icon: ClipboardList },
+    { label: "Customer Orders",url:"/dashboard/vendor/customerOrders" ,icon: ClipboardList },
     { label: "Subscription", icon: CreditCard },
     { label: "Profile Settings", url: "/profile", icon: Settings },
   ],
