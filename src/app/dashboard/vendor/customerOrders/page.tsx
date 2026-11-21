@@ -1,24 +1,22 @@
+'use client';
 
-
-
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Calendar,
   CheckCircle2,
   MapPin,
   MessageSquare,
   Pizza,
+  ShoppingBag,
   User,
   XCircle,
-} from "lucide-react";
-import { toast } from "react-toastify";
-import { authClient } from "@/lib/auth-client";
+} from 'lucide-react';
+import { toast } from 'react-toastify';
+import { authClient } from '@/lib/auth-client';
 import {
   getVendorCustomerOrders,
   updateOrderStatus,
-} from "@/lib/actions/customerOrders";
+} from '@/lib/actions/customerOrders';
 
 interface CustomerOrder {
   _id: string;
@@ -33,7 +31,7 @@ interface CustomerOrder {
   address?: string;
   message?: string;
   note?: string;
-  status: "Pending" | "Accepted" | "Rejected" | "Cancelled" | string;
+  status: 'Pending' | 'Accepted' | 'Rejected' | 'Cancelled' | string;
   vendorId?: string;
   vendorEmail?: string;
 }
@@ -68,7 +66,7 @@ const CustomerOrdersPages = () => {
       } catch (err) {
         if (active) {
           toast.error(
-            err instanceof Error ? err.message : "Failed to load orders."
+            err instanceof Error ? err.message : 'Failed to load orders.'
           );
         }
       } finally {
@@ -85,7 +83,7 @@ const CustomerOrdersPages = () => {
 
   const handleDecision = async (
     orderId: string,
-    status: "Accepted" | "Rejected"
+    status: 'Accepted' | 'Rejected'
   ) => {
     try {
       setUpdatingId(orderId);
@@ -103,7 +101,7 @@ const CustomerOrdersPages = () => {
       toast.success(`Order ${status.toLowerCase()} successfully.`);
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Could not update order status."
+        err instanceof Error ? err.message : 'Could not update order status.'
       );
     } finally {
       setUpdatingId(null);
@@ -112,21 +110,32 @@ const CustomerOrdersPages = () => {
 
   const getBadgeStyle = (status: string) => {
     switch (status) {
-      case "Accepted":
-        return "bg-emerald-100 text-emerald-800 border-emerald-200";
-      case "Rejected":
-      case "Cancelled":
-        return "bg-rose-100 text-rose-800 border-rose-200";
+      case 'Accepted':
+        return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      case 'Rejected':
+      case 'Cancelled':
+        return 'bg-rose-100 text-rose-800 border-rose-200';
       default:
-        return "bg-amber-100 text-amber-800 border-amber-200";
+        return 'bg-amber-100 text-amber-800 border-amber-200';
     }
   };
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#3d211a]">Customer Orders</h1>
-        <p className="text-sm text-[#6f4a3a]">
+        <div className="mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-[#e6c8be] bg-[#faece6] px-3.5 py-1 text-[11px] font-bold tracking-wider text-[#b53b22] uppercase">
+          <ShoppingBag className="h-3.5 w-3.5 text-[#c94a24]" />
+          <span>Order Management</span>
+        </div>
+
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#3d211a] sm:text-4xl">
+          Customer{' '}
+          <span className="bg-gradient-to-r from-[#9e1b1e] to-[#e05a2b] bg-clip-text text-transparent">
+            Orders
+          </span>
+        </h1>
+
+        <p className="mt-1.5 text-sm text-[#6f4a3a]">
           Review incoming PizzaHut orders and accept or reject pending requests.
         </p>
       </div>
@@ -148,10 +157,10 @@ const CustomerOrdersPages = () => {
       ) : (
         <div className="space-y-4">
           {orders.map((order) => {
-            const title = order.itemName || order.name || "Pizza Order";
-            const address = order.deliveryAddress || order.address || "N/A";
+            const title = order.itemName || order.name || 'Pizza Order';
+            const address = order.deliveryAddress || order.address || 'N/A';
             const customerMessage = order.message || order.note;
-            const isPending = order.status === "Pending";
+            const isPending = order.status === 'Pending';
 
             return (
               <div
@@ -196,7 +205,7 @@ const CustomerOrdersPages = () => {
                     <p className="flex items-center gap-1.5 text-xs text-[#3d211a]">
                       <User className="h-3.5 w-3.5 text-[#a4161a]" />
                       <span className="font-medium">
-                        {order.customerName || "Customer"}
+                        {order.customerName || 'Customer'}
                       </span>
                       {order.customerEmail && (
                         <span className="text-[#6f4a3a]">
@@ -236,7 +245,7 @@ const CustomerOrdersPages = () => {
                       <button
                         type="button"
                         disabled={updatingId === order._id}
-                        onClick={() => handleDecision(order._id, "Accepted")}
+                        onClick={() => handleDecision(order._id, 'Accepted')}
                         className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
                       >
                         <CheckCircle2 className="h-4 w-4" />
@@ -246,7 +255,7 @@ const CustomerOrdersPages = () => {
                       <button
                         type="button"
                         disabled={updatingId === order._id}
-                        onClick={() => handleDecision(order._id, "Rejected")}
+                        onClick={() => handleDecision(order._id, 'Rejected')}
                         className="inline-flex items-center gap-1.5 rounded-xl bg-rose-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-50"
                       >
                         <XCircle className="h-4 w-4" />

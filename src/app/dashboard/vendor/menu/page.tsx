@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { toast } from "react-toastify";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { toast } from 'react-toastify';
 import {
   CirclePlus,
   LoaderCircle,
   Pizza,
   UserRound,
   UtensilsCrossed,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { authClient } from "@/lib/auth-client";
-import { GetMenuItems, UpdateMenuStatus } from "@/lib/actions/menu";
-import { MenuItemCard, type MenuItem } from "@/app/components/MenuItemCard";
-import { MenuItemDetails } from "@/app/components/MenuItemDetails";
-import { MenuItemEdit } from "@/app/components/MenuItemEdit";
-import { MenuItemDelete } from "@/app/components/MenuItemDelete";
+import { authClient } from '@/lib/auth-client';
+import { GetMenuItems, UpdateMenuStatus } from '@/lib/actions/menu';
+import { MenuItemCard, type MenuItem } from '@/app/components/MenuItemCard';
+import { MenuItemDetails } from '@/app/components/MenuItemDetails';
+import { MenuItemEdit } from '@/app/components/MenuItemEdit';
+import { MenuItemDelete } from '@/app/components/MenuItemDelete';
 
 // Same button style (PizzaHut theme)
 const addBtn =
-  "inline-flex h-11 items-center gap-2 rounded-full bg-gradient-to-r from-[#8f1116] via-[#c02a1d] to-[#f2761b] px-5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(164,22,26,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_30px_-12px_rgba(194,42,29,0.9)]";
+  'inline-flex h-11 items-center gap-2 rounded-full bg-gradient-to-r from-[#8f1116] via-[#c02a1d] to-[#f2761b] px-5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(164,22,26,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_30px_-12px_rgba(194,42,29,0.9)]';
 
 const MenuItemsPages = () => {
   // Better Auth theke session
@@ -31,7 +31,7 @@ const MenuItemsPages = () => {
   const [loadError, setLoadError] = useState(false);
 
   // Modal gular state - kun ta khola ache
-  const [viewId, setViewId] = useState(""); // View details modal
+  const [viewId, setViewId] = useState(''); // View details modal
   const [editItem, setEditItem] = useState<MenuItem | null>(null); // Edit modal
   const [deleteItem, setDeleteItem] = useState<MenuItem | null>(null); // Delete confirm modal
 
@@ -43,7 +43,7 @@ const MenuItemsPages = () => {
         setItems(data);
       } catch {
         setLoadError(true);
-        toast.error("Could not load menu items");
+        toast.error('Could not load menu items');
       } finally {
         setLoading(false);
       }
@@ -73,9 +73,9 @@ const MenuItemsPages = () => {
     // Rule: Active hote gele age admin "Approved" korte hobe
     // (na hole item featured section e jabe na)
     if (
-      newStatus === "Active" &&
-      current?.status !== "Approved" &&
-      current?.status !== "Active"
+      newStatus === 'Active' &&
+      current?.status !== 'Approved' &&
+      current?.status !== 'Active'
     ) {
       toast.error("Admin approval pending - can't activate yet.");
       return;
@@ -96,7 +96,7 @@ const MenuItemsPages = () => {
       );
       toast.success(`Item marked as ${newStatus}!`);
     } catch {
-      toast.error("Could not update status.");
+      toast.error('Could not update status.');
     }
   };
 
@@ -138,7 +138,7 @@ const MenuItemsPages = () => {
   }
 
   // Vendor chara access nai
-  if (session.user.role !== "vendor") {
+  if (session.user.role !== 'vendor') {
     return (
       <div className="mx-auto mt-6 max-w-md rounded-[30px] border border-[#8d1b1b]/10 bg-white p-8 text-center shadow-[0_32px_80px_-48px_rgba(80,20,10,0.55)]">
         <span className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#a4161a]/10 text-[#a4161a]">
@@ -166,7 +166,10 @@ const MenuItemsPages = () => {
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-[#3d211a] sm:text-3xl">
-            My Menu Items
+            My{' '}
+            <span className="bg-gradient-to-r from-[#9e1b1e] to-[#e05a2b] bg-clip-text text-transparent">
+              Menu Items
+            </span>
           </h1>
           <p className="mt-1 text-sm text-[#7a5645]">
             See, update and manage all your menu items in one place.
@@ -231,7 +234,7 @@ const MenuItemsPages = () => {
         // Menu items list
         <>
           <p className="mb-4 text-sm font-semibold text-[#a87b62]">
-            {items.length} item{items.length > 1 ? "s" : ""} found
+            {items.length} item{items.length > 1 ? 's' : ''} found
           </p>
 
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -251,7 +254,7 @@ const MenuItemsPages = () => {
 
       {/* ===== Modal gula ===== */}
       {viewId ? (
-        <MenuItemDetails itemId={viewId} onClose={() => setViewId("")} />
+        <MenuItemDetails itemId={viewId} onClose={() => setViewId('')} />
       ) : null}
 
       {editItem ? (
