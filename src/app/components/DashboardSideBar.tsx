@@ -66,7 +66,7 @@ const menuItemsByRole: Record<Role, DashboardMenuItem[]> = {
   ],
   admin: [
     { label: "Overview", url: "/dashboard/admin", icon: LayoutDashboard },
-    { label: "Manage Users", icon: Users },
+    { label: "Manage Users", url: "/dashboard/admin/users", icon: Users },
     { label: "Manage Menu Items", icon: Pizza },
     { label: "Transactions", icon: Wallet },
   ],
