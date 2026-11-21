@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍕 PizzaHut — Food Delivery & Vendor Management Platform
 
-## Getting Started
+A modern, role-based food delivery web application built with **Next.js**, **TypeScript**, and **Tailwind CSS**, supporting **Customer**, **Vendor**, and **Admin** workflows.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* **Framework:** Next.js (App Router) & React
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS & Lucide Icons
+* **Authentication:** Better Auth (Role-based access control)
+* **Notifications:** React Toastify / Sonner
+* **Payments:** Stripe Checkout (Vendor Premium Subscription)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Key Features
 
-## Learn More
+### 🔐 Role-Based Authentication & Dashboards
+* Separate dashboard views and route protection for **Customer**, **Vendor**, and **Admin** roles.
 
-To learn more about Next.js, take a look at the following resources:
+### 🍕 Menu Browsing & Item Details
+* Browse available pizza and food items with detailed item pages showing price, description, and vendor information.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🛒 Order Management System
+* Interactive order modal with **Delivery Date**, **Delivery Address**, and **Special Instructions** fields.
+* Automatically attaches customer, vendor, and menu item details.
+* Prevents vendors from ordering their own items and blocks duplicate active orders (`Pending` / `Accepted`) for the same item and delivery date.
+* Tracks order lifecycle statuses: `Pending`, `Accepted`, `Rejected`, and `Cancelled`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 💳 Vendor Subscription (Stripe Checkout)
+* Free vendors can publish up to **3 active menu items**.
+* **Upgrade to Premium** flow powered by **Stripe Checkout** with dedicated **Payment Success** and **Payment Cancel** pages.
+* Subscription status updates only after verified server-side webhook confirmation.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ⚙️ Run Locally
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Install dependencies:**
+   ```bash
+   npm install
