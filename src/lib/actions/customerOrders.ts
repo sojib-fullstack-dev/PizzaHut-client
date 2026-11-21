@@ -3,13 +3,20 @@
 
 const API_BASE =process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
 
+// Vendor er customer orders fetch kora
+// Shudhu vendorEmail diye filter - AND query avoid korte vendorId use korbo na
+// (Backend te vendorEmail & vendorId er AND query order miss kore)
 export async function getVendorCustomerOrders(params?: {
   vendorEmail?: string;
   vendorId?: string;
 }) {
+  // Priority: vendorEmail (most reliable) → vendorId fallback
   const query = new URLSearchParams();
-  if (params?.vendorEmail) query.set("vendorEmail", params.vendorEmail);
-  if (params?.vendorId) query.set("vendorId", params.vendorId);
+  if (params?.vendorEmail) {
+    query.set("vendorEmail", params.vendorEmail);
+  } else if (params?.vendorId) {
+    query.set("vendorId", params.vendorId);
+  }
 
   const url = query.toString()
     ? `${API_BASE}/orders?${query.toString()}`

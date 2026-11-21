@@ -34,10 +34,12 @@ export async function createOrder(orderData:OrderData) {
   return response.json();
 }
 
-    // getOrders
-    
-export async function getOrders() {
-  const response = await fetch(`${BASE_URL}/orders`);
+    // getOrders - customerEmail dile shudhu oi customer er orders ashbe
+export async function getOrders(customerEmail?: string) {
+  const url = customerEmail
+    ? `${BASE_URL}/orders?customerEmail=${encodeURIComponent(customerEmail)}`
+    : `${BASE_URL}/orders`;
+  const response = await fetch(url);
   return response.json();
 }
 

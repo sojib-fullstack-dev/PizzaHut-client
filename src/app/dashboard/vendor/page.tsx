@@ -59,7 +59,11 @@ export default function VendorOverviewPage() {
         }
 
         const [menuRes, orderRes] = await Promise.all([
-          fetch(`${API_BASE}/menus`),
+          fetch(
+            vendorEmail
+              ? `${API_BASE}/menus?vendorEmail=${encodeURIComponent(vendorEmail)}`
+              : `${API_BASE}/menus?vendorId=${encodeURIComponent(vendorId || '')}`
+          ),
           fetch(
             vendorEmail
               ? `${API_BASE}/orders?vendorEmail=${encodeURIComponent(vendorEmail)}`

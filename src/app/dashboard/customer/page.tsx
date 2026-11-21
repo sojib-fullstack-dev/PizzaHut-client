@@ -42,15 +42,23 @@ const CustomerDashBoardPages = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  // Orders API theke data load
+  // Orders API theke data load — shudhu nijer email er orders
   useEffect(() => {
+    // Session load na hooa porjonto wait koro
+    if (isPending || !user?.email) return;
+
     const loadOrders = async () => {
       try {
-        const data = await getOrders();
+        // customerEmail query diye backend theke shudhu nijer orders ashbe
+        const data = await getOrders(user.email);
         if (!Array.isArray(data)) {
           throw new Error("Orders response was not a list.");
         }
-        setOrders(data);
+        // Client-side double-check: shudhu nijer email er orders rakhbo
+        const mine = data.filter(
+          (order) => order.customerEmail === user.email
+        );
+        setOrders(mine);
         setHasError(false);
       } catch (error) {
         console.error("Could not load orders.", error);
@@ -62,12 +70,10 @@ const CustomerDashBoardPages = () => {
     };
 
     loadOrders();
-  }, []);
+  }, [isPending, user?.email]);
 
-  // Shudhu nijer order (customerId match kore), notun age
-  const myOrders = orders
-    .filter((order) => order.customerId === user?.id)
-    .reverse();
+  // orders akhon already filtered (email match kora), reverse kore notun age
+  const myOrders = [...orders].reverse();
 
   // Status onujayi ginta (purano order e status na thakle Pending)
   const countByStatus = (status: string) =>

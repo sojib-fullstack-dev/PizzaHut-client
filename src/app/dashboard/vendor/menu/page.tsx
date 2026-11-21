@@ -25,6 +25,8 @@ const addBtn =
 const MenuItemsPages = () => {
   // Better Auth theke session
   const { data: session, isPending } = authClient.useSession();
+  const vendorEmail = session?.user?.email;
+  const vendorId = session?.user?.id;
 
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,12 +37,24 @@ const MenuItemsPages = () => {
   const [editItem, setEditItem] = useState<MenuItem | null>(null); // Edit modal
   const [deleteItem, setDeleteItem] = useState<MenuItem | null>(null); // Delete confirm modal
 
-  // Backend theke menu items load korchi
+  // Backend theke shudhu nijer menu items load korchi
   useEffect(() => {
+    // Session load na hooa porjonto wait koro
+    if (isPending || !vendorEmail) return;
+
     const loadItems = async () => {
       try {
-        const data = await GetMenuItems();
-        setItems(data);
+        // vendorEmail query diye backend theke shudhu nijer items ashbe
+        // (backend e vendorEmail filter add korte hobe - nicher note dekho)
+        const data = await GetMenuItems("", vendorEmail);
+        const list = Array.isArray(data) ? data : [];
+        // Client-side filter: shudhu nijer vendorEmail ba vendorId er items
+        const mine = list.filter(
+          (item: MenuItem) =>
+            (vendorEmail && item.vendorEmail === vendorEmail) ||
+            (vendorId && item.vendorId === vendorId)
+        );
+        setItems(mine);
       } catch {
         setLoadError(true);
         toast.error('Could not load menu items');
@@ -50,7 +64,7 @@ const MenuItemsPages = () => {
     };
 
     loadItems();
-  }, []);
+  }, [isPending, vendorEmail, vendorId]);
 
   // Edit save howar por list update
   const handleSaved = (updated: MenuItem) => {

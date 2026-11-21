@@ -58,7 +58,15 @@ const CustomerOrdersPages = () => {
         }
 
         const data = await getVendorCustomerOrders({ vendorEmail, vendorId });
-        const list = Array.isArray(data) ? data : data.orders || [];
+        const rawList = Array.isArray(data) ? data : data.orders || [];
+
+        // Client-side double-check: shudhu nijer vendorEmail er orders rakhbo
+        // (backend AND query te kichhu miss hole ei filter dhore rakhbe)
+        const list = vendorEmail
+          ? rawList.filter(
+              (order: CustomerOrder) => order.vendorEmail === vendorEmail
+            )
+          : rawList;
 
         if (active) {
           setOrders(list);

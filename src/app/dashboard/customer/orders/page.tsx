@@ -46,15 +46,23 @@ const MyOrdersPages = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  // Orders API theke data load
+  // Orders API theke data load — shudhu nijer email er orders
   useEffect(() => {
+    // Session load na hooa porjonto wait koro
+    if (isPending || !user?.email) return;
+
     const loadOrders = async () => {
       try {
-        const data = await getOrders();
+        // customerEmail query diye backend theke shudhu nijer orders ashbe
+        const data = await getOrders(user.email);
         if (!Array.isArray(data)) {
           throw new Error("Orders response was not a list.");
         }
-        setOrders(data);
+        // Client-side double-check: shudhu nijer email er orders rakhbo
+        const mine = data.filter(
+          (order) => order.customerEmail === user.email
+        );
+        setOrders(mine);
         setHasError(false);
       } catch (error) {
         console.error("Could not load orders.", error);
@@ -66,13 +74,20 @@ const MyOrdersPages = () => {
     };
 
     loadOrders();
-  }, []);
+  }, [isPending, user?.email]);
 
-  // Shudhu nijer order dekhay (customerId match kore)
-  const myOrders = orders.filter((order) => order.customerId === user?.id);
+  // orders akhon already filtered by email from backend + client double-check
+  const myOrders = orders;
 
-  // Pending order cancel kora jay - status "Cancelled" hoye jay
+  // Pending order cancel kora jay - ownership check shoho
   const handleCancel = async (orderId: string) => {
+    // Ownership check: shudhu nijer order cancel korte parbe
+    const target = myOrders.find((o) => o._id === orderId);
+    if (!target || target.customerEmail !== user?.email) {
+      toast.error("You can only cancel your own orders.");
+      return;
+    }
+
     try {
       const result = await updateOrderStatus(orderId, "Cancelled");
 

@@ -29,8 +29,13 @@ export const CreateMenuItems = async (data: FromData) => {
 
 
 // Menu items load korar jonno (GET)
-export const GetMenuItems = async (queryString= "" ) => {
-  const res = await fetch(`${BASE_URL}/menus?${queryString }`);
+// vendorEmail dile shudhu oi vendor er items ashbe (vendor dashboard er jonno)
+// queryString dile extra filters add kora jay (browseMenu er jonno)
+export const GetMenuItems = async (queryString = "", vendorEmail?: string) => {
+  const params = new URLSearchParams(queryString);
+  if (vendorEmail) params.set("vendorEmail", vendorEmail);
+  const qs = params.toString();
+  const res = await fetch(`${BASE_URL}/menus${qs ? `?${qs}` : ""}`);
   return res.json();
 };
 

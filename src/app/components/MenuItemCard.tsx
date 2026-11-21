@@ -13,6 +13,8 @@ export type MenuItem = {
   location: string;
   image: string;
   status?: string;
+  vendorId?: string;
+  vendorEmail?: string;
 };
 
 
