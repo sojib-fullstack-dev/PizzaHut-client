@@ -7,6 +7,10 @@ export type FromData = {
   price: string;
   location: string;
   image: string;
+  // Vendor er identity - AddMenuForm session theke save kore (optional)
+  vendorId?: string;
+  vendorName?: string;
+  vendorEmail?: string;
 };
 
 

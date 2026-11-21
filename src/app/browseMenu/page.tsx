@@ -6,6 +6,7 @@ import { Flame, LoaderCircle, Pizza, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { MenuCard } from "@/app/components/MenuCard";
+import { MenuCategoryChips } from "@/app/components/MenuCategoryChips";
 import { MenuFilters } from "@/app/components/MenuFilters";
 import type { MenuItem } from "@/app/components/MenuItemCard";
 import { GetMenuItems } from "@/lib/actions/menu";
@@ -19,6 +20,8 @@ function BrowseMenuContent() {
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [location, setLocation] = useState(searchParams.get("location") || "");
+  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
+  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
 
   const [items, setItems] = useState<MenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +52,8 @@ function BrowseMenuContent() {
     if (search.trim()) params.set("search", search.trim());
     if (category) params.set("category", category);
     if (location.trim()) params.set("location", location.trim());
+    if (minPrice) params.set("minPrice", minPrice);
+    if (maxPrice) params.set("maxPrice", maxPrice);
 
     const queryString = params.toString();
 
@@ -62,13 +67,23 @@ function BrowseMenuContent() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [search, category, location, pathname, loadItems]);
+  }, [search, category, location, minPrice, maxPrice, pathname, loadItems]);
+
+  // Price filter client-side (server price string, tai server e price query ney na)
+  const visibleItems = items.filter((item) => {
+    const price = Number(item.price);
+    if (minPrice && price < Number(minPrice)) return false;
+    if (maxPrice && price > Number(maxPrice)) return false;
+    return true;
+  });
 
   // Reset filters
   const handleReset = () => {
     setSearch("");
     setCategory("");
     setLocation("");
+    setMinPrice("");
+    setMaxPrice("");
   };
 
   // Retry button
@@ -77,10 +92,14 @@ function BrowseMenuContent() {
     if (search.trim()) params.set("search", search.trim());
     if (category) params.set("category", category);
     if (location.trim()) params.set("location", location.trim());
+    if (minPrice) params.set("minPrice", minPrice);
+    if (maxPrice) params.set("maxPrice", maxPrice);
     void loadItems(params.toString());
   };
 
-  const hasActiveFilters = Boolean(search || category || location);
+  const hasActiveFilters = Boolean(
+    search || category || location || minPrice || maxPrice
+  );
 
   return (
     <div className="min-h-screen bg-[#fffaf2]">
@@ -109,16 +128,21 @@ function BrowseMenuContent() {
           </p>
         </motion.div>
 
-        {/* Search by name, filter by category & location */}
+        {/* Search by name, price (low-high) & location */}
         <MenuFilters
           search={search}
           onSearchChange={setSearch}
-          category={category}
-          onCategoryChange={setCategory}
+          minPrice={minPrice}
+          onMinPriceChange={setMinPrice}
+          maxPrice={maxPrice}
+          onMaxPriceChange={setMaxPrice}
           location={location}
           onLocationChange={setLocation}
           onReset={handleReset}
         />
+
+        {/* Categories - ekta ekta kore niche dekha jay, click korle filter hoy */}
+        <MenuCategoryChips active={category} onChange={setCategory} />
 
         {isLoading ? (
           // Loading state
@@ -143,7 +167,7 @@ function BrowseMenuContent() {
               Try again
             </button>
           </div>
-        ) : items.length === 0 ? (
+        ) : visibleItems.length === 0 ? (
           // Empty state - kono item match na korle
           <div className="rounded-3xl border-2 border-dashed border-[#a4161a]/20 bg-white px-6 py-14 text-center">
             <Pizza className="mx-auto size-10 text-[#a4161a]/50" aria-hidden />
@@ -169,7 +193,7 @@ function BrowseMenuContent() {
         ) : (
           // Menu item cards with smooth staggered animation
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {items.map((item, index) => (
+            {visibleItems.map((item, index) => (
               <motion.div
                 key={item._id}
                 initial={{ opacity: 1 }}

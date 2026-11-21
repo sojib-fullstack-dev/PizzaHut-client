@@ -129,11 +129,17 @@ export function MenuItemEdit({ item, onClose, onSaved }: Props) {
                 required
                 className={`${inputClass} appearance-none pr-10`}
               >
-                <option value="pizza">Pizza</option>
-                <option value="sides">Sides</option>
-                <option value="drinks">Drinks</option>
-                <option value="desserts">Desserts</option>
-                <option value="offers">Offers</option>
+                {/* Notun category list - value = label (AddMenuForm er sathe same) */}
+                <option value="Classic Pizzas">Classic Pizzas</option>
+                <option value="Vegetarian Pizzas">Vegetarian Pizzas</option>
+                <option value="Meat Lovers">Meat Lovers</option>
+                <option value="Specialty / Gourmet Pizzas">
+                  Specialty / Gourmet Pizzas
+                </option>
+                <option value="Sides & Appetizers">Sides &amp; Appetizers</option>
+                <option value="Beverages & Desserts">
+                  Beverages &amp; Desserts
+                </option>
               </select>
             </div>
           </div>

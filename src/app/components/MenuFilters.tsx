@@ -1,12 +1,14 @@
 "use client";
 
-import { ChevronDown, MapPin, Pizza, RotateCcw, Search, X } from "lucide-react";
+import { DollarSign, MapPin, RotateCcw, Search, X } from "lucide-react";
 
 type MenuFiltersProps = {
   search: string;
   onSearchChange: (val: string) => void;
-  category: string;
-  onCategoryChange: (val: string) => void;
+  minPrice: string; // Low price (kom dimer jonno)
+  onMinPriceChange: (val: string) => void;
+  maxPrice: string; // High price (beshi dimer jonno)
+  onMaxPriceChange: (val: string) => void;
   location: string;
   onLocationChange: (val: string) => void;
   onReset: () => void;
@@ -15,17 +17,19 @@ type MenuFiltersProps = {
 export function MenuFilters({
   search,
   onSearchChange,
-  category,
-  onCategoryChange,
+  minPrice,
+  onMinPriceChange,
+  maxPrice,
+  onMaxPriceChange,
   location,
   onLocationChange,
   onReset,
 }: MenuFiltersProps) {
-  const hasActiveFilters = Boolean(search || category || location);
+  const hasActiveFilters = Boolean(search || minPrice || maxPrice || location);
 
   return (
     <div className="mb-8 rounded-3xl border border-[#8d1b1b]/15 bg-white/95 p-4 sm:p-5 shadow-[0_10px_30px_-15px_rgba(80,20,10,0.08)] backdrop-blur-sm">
-      {/* 3 filter controls: Search, Category, Location */}
+      {/* 3 filter controls: Search, Price (low-high), Location */}
       <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
         {/* 1. Search by name */}
         <div className="relative">
@@ -51,28 +55,46 @@ export function MenuFilters({
           )}
         </div>
 
-        {/* 2. Filter by category */}
-        <div className="relative">
-          <Pizza
-            className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#a87b62]"
-            aria-hidden
-          />
-          <select
-            value={category}
-            onChange={(e) => onCategoryChange(e.target.value)}
-            className="h-11 w-full appearance-none rounded-2xl border border-[#8d1b1b]/15 bg-[#fffaf2] pl-10 pr-9 text-sm font-medium text-[#3d211a] outline-none transition focus:border-[#a4161a]/40 focus:bg-white focus:ring-2 focus:ring-[#a4161a]/10"
-          >
-            <option value="">All Categories</option>
-            <option value="pizza">Pizza</option>
-            <option value="sides">Sides</option>
-            <option value="drinks">Drinks</option>
-            <option value="desserts">Desserts</option>
-            <option value="offers">Offers</option>
-          </select>
-          <ChevronDown
-            className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-[#a87b62]"
-            aria-hidden
-          />
+        {/* 2. Price range: Low - High (category dropdown er jaigai) */}
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <DollarSign
+              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#a87b62]"
+              aria-hidden
+            />
+            <input
+              type="number"
+              min="0"
+              value={minPrice}
+              onChange={(e) => onMinPriceChange(e.target.value)}
+              placeholder="Low"
+              className="h-11 w-full rounded-2xl border border-[#8d1b1b]/15 bg-[#fffaf2] pl-10 pr-3 text-sm font-medium text-[#3d211a] placeholder:text-[#a87b62]/70 outline-none transition focus:border-[#a4161a]/40 focus:bg-white focus:ring-2 focus:ring-[#a4161a]/10"
+            />
+          </div>
+          <span className="text-sm font-bold text-[#a87b62]">-</span>
+          <div className="relative flex-1">
+            <input
+              type="number"
+              min="0"
+              value={maxPrice}
+              onChange={(e) => onMaxPriceChange(e.target.value)}
+              placeholder="High"
+              className="h-11 w-full rounded-2xl border border-[#8d1b1b]/15 bg-[#fffaf2] px-3 text-sm font-medium text-[#3d211a] placeholder:text-[#a87b62]/70 outline-none transition focus:border-[#a4161a]/40 focus:bg-white focus:ring-2 focus:ring-[#a4161a]/10"
+            />
+          </div>
+          {(minPrice || maxPrice) && (
+            <button
+              type="button"
+              onClick={() => {
+                onMinPriceChange("");
+                onMaxPriceChange("");
+              }}
+              className="rounded-full p-0.5 text-[#a87b62] hover:text-[#a4161a]"
+              aria-label="Clear price filter"
+            >
+              <X className="size-4" />
+            </button>
+          )}
         </div>
 
         {/* 3. Filter by location */}

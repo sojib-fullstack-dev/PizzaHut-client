@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { CreateMenuItems, type FromData } from "@/lib/actions/menu";
 import { uploadImage } from "@/lib/uploadImage";
+import { useSession } from "@/lib/auth-client";
 
 
 const inputClass =
@@ -28,6 +29,12 @@ export function AddMenuForm() {
   const [imagePreview, setImagePreview] = useState("");
 
   const [imageUrl, setImageUrl] = useState("");
+
+  // Vendor er id/name/email - session theke ashe, hidden (UI te dekhay na)
+  const { data: session } = useSession();
+  const vendorUser = session?.user as
+    | { id?: string; name?: string; email?: string }
+    | undefined;
 
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -69,6 +76,10 @@ export function AddMenuForm() {
       price: getTextValue("price"),
       location: getTextValue("location"),
       image: imageUrl,
+      // Vendor info auto attach - pare own-item check kaj kore
+      vendorId: vendorUser?.id,
+      vendorName: vendorUser?.name,
+      vendorEmail: vendorUser?.email,
     };
 
     const result =await CreateMenuItems(data);
@@ -140,13 +151,19 @@ export function AddMenuForm() {
               className={`${inputClass} appearance-none pr-10`}
             >
               <option value="" disabled>
-                Classic Pizzas
+                Select a category
               </option>
-              <option value="pizza">Vegetarian Pizzas</option>
-              <option value="sides">Meat Lovers</option>
-              <option value="drinks">Specialty / Gourmet Pizzas</option>
-              <option value="desserts">Sides & Appetizers</option>
-              <option value="offers">Beverages & Desserts</option>
+              {/* Notun category list - value = label (DB te jeta save hoy oi ta filter hoy) */}
+              <option value="Classic Pizzas">Classic Pizzas</option>
+              <option value="Vegetarian Pizzas">Vegetarian Pizzas</option>
+              <option value="Meat Lovers">Meat Lovers</option>
+              <option value="Specialty / Gourmet Pizzas">
+                Specialty / Gourmet Pizzas
+              </option>
+              <option value="Sides & Appetizers">Sides &amp; Appetizers</option>
+              <option value="Beverages & Desserts">
+                Beverages &amp; Desserts
+              </option>
             </select>
             <ChevronDown
               aria-hidden

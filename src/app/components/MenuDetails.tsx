@@ -17,7 +17,7 @@ import { GetMenuItem } from '@/lib/actions/menu';
 import type { MenuItem } from './MenuItemCard';
 import { useSession } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
-import { createOrder, OrderData } from '@/lib/actions/createOrder';
+import { OrderModal } from './OrderModal';
 
 type Props = {
   itemId: string;
@@ -28,6 +28,9 @@ export function MenuDetails({ itemId }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [reload, setReload] = useState(0);
+
+  // Order Now click hole ei modal khule jay
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
   const router = useRouter();
 
@@ -61,7 +64,7 @@ export function MenuDetails({ itemId }: Props) {
     | { id?: string; role?: string; name: string; email: string }
     | undefined;
 
-const handleOrderNow = async () => {
+const handleOrderNow = () => {
   const currentUser = user 
   
   if (!currentUser) {
@@ -87,18 +90,8 @@ const handleOrderNow = async () => {
     return;
   }
 
-const orderData: OrderData = {
-  itemId: item?._id || itemId,
-  itemName: item?.name,
-  price: item?.price,
-  customerId: currentUser.id,
-  customerName: currentUser.name,
-  customerEmail: currentUser.email,
-};
-
-  const result = await createOrder(orderData);
-  console.log('Order response:', result);
-  toast.success('Order placed successfully!');
+  // Shob check pass hole order form modal khule jay
+  setShowOrderModal(true);
 };
 
   // Loading state
@@ -259,6 +252,15 @@ const orderData: OrderData = {
             </p>
           </div>
         </motion.div>
+
+        {/* Order form modal - customer info, delivery info nia */}
+        {showOrderModal && user ? (
+          <OrderModal
+            item={item}
+            user={user}
+            onClose={() => setShowOrderModal(false)}
+          />
+        ) : null}
       </div>
     </div>
   );

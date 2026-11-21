@@ -45,8 +45,8 @@ type DashboardMenuItem = {
 const menuItemsByRole: Record<Role, DashboardMenuItem[]> = {
   customer: [
     { label: "Overview", url: "/dashboard/customer", icon: LayoutDashboard },
-    { label: "My Orders", icon: ShoppingBag },
-    { label: "Profile Settings", icon: Settings },
+    { label: "My Orders",url: "/dashboard/customer/orders", icon: ShoppingBag },
+    { label: "Profile Settings",url: "/profile", icon: Settings },
   ],
   vendor: [
     { label: "Overview", url: "/dashboard/vendor", icon: LayoutDashboard },

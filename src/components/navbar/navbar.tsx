@@ -79,7 +79,7 @@ function BrandLogo({ onNavigate }: { onNavigate: () => void }) {
         </span>
       </span>
 
-      <span className="flex flex-col leading-none">
+      <span className="flex flex-col leading-none max-[374px]:hidden">
         <span className="text-[1.3rem] font-extrabold tracking-[-0.045em] text-[#3d211a] sm:text-[1.45rem]">
           Pizza
           <span className="bg-gradient-to-r from-[#a4161a] to-[#ea580c] bg-clip-text text-transparent">
