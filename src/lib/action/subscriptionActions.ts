@@ -1,7 +1,5 @@
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:5000";
+// Private API e token header auto attach hoy (jwtAuth helper)
+import { authFetch } from "./jwtAuth";
 
 export interface CreateCheckoutSessionParams {
   userId: string;
@@ -40,7 +38,7 @@ export interface VerifyCheckoutResponse {
 export async function createCheckoutSession(
   params: CreateCheckoutSessionParams
 ): Promise<CheckoutSessionResponse> {
-  const res = await fetch(`${API_BASE}/payments/create-checkout-session`, {
+  const res = await authFetch("/payments/create-checkout-session", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -63,7 +61,7 @@ export async function createCheckoutSession(
 export async function verifyCheckoutSession(
   params: VerifyCheckoutSessionParams
 ): Promise<VerifyCheckoutResponse> {
-  const res = await fetch(`${API_BASE}/payments/checkout-verify`, {
+  const res = await authFetch("/payments/checkout-verify", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -82,7 +80,7 @@ export async function verifyCheckoutSession(
 
 // 3. Switch Vendor back to Free Plan
 export async function switchToFreePlan(params: SwitchToFreePlanParams) {
-  const res = await fetch(`${API_BASE}/subscriptions/free`, {
+  const res = await authFetch("/subscriptions/free", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -104,7 +102,7 @@ export async function getLiveVendorProfile(
   userEmail: string,
   userId?: string
 ) {
-  const res = await fetch(`${API_BASE}/users`);
+  const res = await authFetch("/users");
   if (!res.ok) {
     throw new Error("Failed to fetch live user profile.");
   }

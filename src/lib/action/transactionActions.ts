@@ -1,7 +1,5 @@
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:5000";
+// Private API e token header auto attach hoy (jwtAuth helper)
+import { authFetch } from "./jwtAuth";
 
 export interface TransactionRecord {
   _id: string;
@@ -21,7 +19,7 @@ export interface TransactionRecord {
 // Fetch all transactions from Express backend
 export async function getTransactions(): Promise<TransactionRecord[]> {
   try {
-    const res = await fetch(`${API_BASE}/transactions`);
+    const res = await authFetch("/transactions");
     if (!res.ok) {
       throw new Error(`Failed to fetch transactions: HTTP ${res.status}`);
     }

@@ -19,11 +19,12 @@ export type OrderData = {
 };
 
 
-const BASE_URL =process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+// Private API e token header auto attach hoy (jwtAuth helper)
+import { authFetch } from "../action/jwtAuth";
 
     //  createOrder
 export async function createOrder(orderData:OrderData) {
-  const response = await fetch(`${BASE_URL}/orders`, {
+  const response = await authFetch('/orders', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -37,15 +38,15 @@ export async function createOrder(orderData:OrderData) {
     // getOrders - customerEmail dile shudhu oi customer er orders ashbe
 export async function getOrders(customerEmail?: string) {
   const url = customerEmail
-    ? `${BASE_URL}/orders?customerEmail=${encodeURIComponent(customerEmail)}`
-    : `${BASE_URL}/orders`;
-  const response = await fetch(url);
+    ? `/orders?customerEmail=${encodeURIComponent(customerEmail)}`
+    : `/orders`;
+  const response = await authFetch(url);
   return response.json();
 }
 
     // order status update (cancel etc)
 export async function updateOrderStatus(id: string, status: string) {
-  const response = await fetch(`${BASE_URL}/orders/${id}`, {
+  const response = await authFetch(`/orders/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

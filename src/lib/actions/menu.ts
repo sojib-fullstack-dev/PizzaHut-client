@@ -1,5 +1,8 @@
 const BASE_URL =process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
 
+// Private API e token header auto attach hoy (jwtAuth helper)
+import { authFetch } from '../action/jwtAuth';
+
 export type FromData = {
   name: string;
   category: string;
@@ -16,7 +19,7 @@ export type FromData = {
 
 // add items
 export const CreateMenuItems = async (data: FromData) => {
-  const res = await fetch(`${BASE_URL}/menus`, {
+  const res = await authFetch('/menus', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -48,7 +51,7 @@ export const GetMenuItem = async (id: string) => {
 
 // Menu item update korar jonno (PATCH - server e patch api ache)
 export const UpdateMenuItem = async (id: string, data: FromData) => {
-  const res = await fetch(`${BASE_URL}/menus/${id}`, {
+  const res = await authFetch(`/menus/${id}`, {
     method: 'PATCH',
     headers: {
       'content-type': 'application/json',
@@ -60,7 +63,7 @@ export const UpdateMenuItem = async (id: string, data: FromData) => {
 
 // Menu item delete korar jonno (DELETE)
 export const DeleteMenuItem = async (id: string) => {
-  const res = await fetch(`${BASE_URL}/menus/${id}`, {
+  const res = await authFetch(`/menus/${id}`, {
     method: 'DELETE',
   });
   return res.json();
@@ -74,7 +77,7 @@ export const GetFeaturedMenuItems = async () => {
 
 // Menu item er status update (Pending / Approved / Active / Inactive ...)
 export const UpdateMenuStatus = async (id: string, status: string) => {
-  const res = await fetch(`${BASE_URL}/menus/${id}`, {
+  const res = await authFetch(`/menus/${id}`, {
     method: 'PATCH',
     headers: {
       'content-type': 'application/json',

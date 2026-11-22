@@ -1,7 +1,8 @@
 
 
 
-const API_BASE =process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+// Private API e token header auto attach hoy (jwtAuth helper)
+import { authFetch } from "../action/jwtAuth";
 
 // Vendor er customer orders fetch kora
 // Shudhu vendorEmail diye filter - AND query avoid korte vendorId use korbo na
@@ -19,10 +20,10 @@ export async function getVendorCustomerOrders(params?: {
   }
 
   const url = query.toString()
-    ? `${API_BASE}/orders?${query.toString()}`
-    : `${API_BASE}/orders`;
+    ? `/orders?${query.toString()}`
+    : `/orders`;
 
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await authFetch(url, { cache: "no-store" });
   if (!res.ok) {
     throw new Error("Failed to fetch customer orders.");
   }
@@ -38,7 +39,7 @@ export async function updateOrderStatus(
     vendorEmail?: string;
   }
 ) {
-  const res = await fetch(`${API_BASE}/orders/${orderId}`, {
+  const res = await authFetch(`/orders/${orderId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

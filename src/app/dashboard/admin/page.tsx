@@ -20,12 +20,10 @@ import {
 
 import { authClient } from '@/lib/auth-client';
 import { GetMenuItems, UpdateMenuStatus } from '@/lib/actions/menu';
+import { authFetch } from '@/lib/action/jwtAuth';
 import { type MenuItem } from '@/app/components/MenuItemCard';
 import { AdminStatCard } from './components/AdminStatCard';
 import { AdminPlatformChart } from './components/AdminPlatformChart';
-
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
 
 interface UserRecord {
   _id?: string;
@@ -75,13 +73,13 @@ const AdminDashBoardPages = () => {
             console.error('Menus fetch error:', err);
             return [];
           }),
-          fetch(`${API_BASE}/users`)
+          authFetch('/users')
             .then((res) => (res.ok ? res.json() : []))
             .catch((err) => {
               console.error('Users fetch error:', err);
               return [];
             }),
-          fetch(`${API_BASE}/transactions`)
+          authFetch('/transactions')
             .then((res) => (res.ok ? res.json() : []))
             .catch((err) => {
               // safe fallback to [] if transactions endpoint is not created yet

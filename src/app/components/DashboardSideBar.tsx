@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession, authClient } from "@/lib/auth-client";
+import { clearAuthToken } from "@/lib/action/jwtAuth";
 import { cn } from "@/lib/utils";
 import { toast } from "react-toastify";
 import {
@@ -97,6 +98,9 @@ export function DashboardSideBar() {
       toast.error("Sign out failed. Please try again.");
       return;
     }
+
+    // Logout e JWT token + email clear
+    clearAuthToken();
 
     toast.success("Signed out successfully");
     router.replace("/");

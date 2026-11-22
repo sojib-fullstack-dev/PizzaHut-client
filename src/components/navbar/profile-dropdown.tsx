@@ -7,6 +7,7 @@ import { ChevronDown, LogOut } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 import { authClient } from '@/lib/auth-client';
+import { clearAuthToken } from '@/lib/action/jwtAuth';
 import { cn } from '@/lib/utils';
 
 type ProfileDropdownProps = {
@@ -39,6 +40,9 @@ export function ProfileDropdown({
       toast.error(error.message);
       return;
     }
+
+    // Logout e JWT token + email clear
+    clearAuthToken();
 
     toast.success('Signed out successfully');
     setIsOpen(false);

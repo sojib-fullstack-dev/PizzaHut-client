@@ -4,6 +4,7 @@ import './globals.css';
 import { Navbar } from '@/components/navbar/navbar';
 import { Footer } from '@/components/Footer/footer';
 import { SavedItemsProvider } from '@/components/saved-items/saved-items-provider';
+import { JwtAuthSync } from '@/app/components/JwtAuthSync';
 import { Bounce, ToastContainer } from 'react-toastify';
 
 const geistSans = Geist({
@@ -34,6 +35,8 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col bg-background text-foreground">
         <SavedItemsProvider>
+          {/* Session er sathe JWT token sync (login e naoya, logout e clear) */}
+          <JwtAuthSync />
           <Navbar />
           <main className="flex-1 flex flex-col">{children}</main>
           <Footer />

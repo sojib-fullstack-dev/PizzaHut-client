@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 
 import { authClient } from "@/lib/auth-client";
 import { userBolokUnbolock } from "@/lib/actions/userBlockUnbolock";
+import { authFetch } from "@/lib/action/jwtAuth";
 import { UserSearchFilterBar } from "./components/UserSearchFilterBar";
 import { UserTable, type AppUser } from "./components/UserTable";
 
@@ -35,7 +36,7 @@ export default function ManageUsersPage() {
 
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`${API_BASE}/users`);
+        const res = await authFetch("/users");
         if (!res.ok) {
           throw new Error(`Failed to fetch users: HTTP ${res.status}`);
         }
