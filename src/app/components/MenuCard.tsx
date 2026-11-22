@@ -2,13 +2,30 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Bookmark, BookmarkCheck, Eye, MapPin, Pizza } from "lucide-react";
+import { toast } from "react-toastify";
 import { useSavedItems } from "@/components/saved-items/saved-items-provider";
+import { authClient } from "@/lib/auth-client";
 import type { MenuItem } from "./MenuItemCard";
 
 export function MenuCard({ item }: { item: MenuItem }) {
   const { isSaved, isLoaded, toggleSavedItem } = useSavedItems();
   const saved = isSaved(item._id);
+  const router = useRouter();
+
+  // Login check - jodi user login na thake tokhon save korte parbe na
+  const { data: session, isPending } = authClient.useSession();
+
+  // Save button click - login nai hole sign-in page e niye jabe
+  const handleSaveClick = () => {
+    if (!isPending && !session?.user) {
+      toast.info("Save korte gele prothome login korte hobe!");
+      router.push("/sign-in");
+      return;
+    }
+    toggleSavedItem(item);
+  };
 
   return (
     <article className="overflow-hidden rounded-3xl border border-[#8d1b1b]/10 bg-white shadow-[0_20px_50px_-35px_rgba(80,20,10,0.5)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_60px_-35px_rgba(80,20,10,0.6)]">
@@ -29,8 +46,8 @@ export function MenuCard({ item }: { item: MenuItem }) {
         )}
         <button
           type="button"
-          onClick={() => toggleSavedItem(item)}
-          disabled={!isLoaded}
+          onClick={handleSaveClick}
+          disabled={!isLoaded || isPending}
           aria-label={saved ? `Remove ${item.name} from saved items` : `Save ${item.name}`}
           aria-pressed={saved}
           title={saved ? "Remove from saved items" : "Save item"}

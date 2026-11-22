@@ -71,6 +71,11 @@ function BrowseMenuContent() {
 
   // Price filter client-side (server price string, tai server e price query ney na)
   const visibleItems = items.filter((item) => {
+    // Browse e shudhu Active ba Approved item dekhabe
+    // (vendor notun item banale status Pending hoy - admin Approve korle Approved hoy, tokhon ei page e asbe)
+    // Pending / Inactive item browse e dekhabe na
+    if (item.status !== "Active" && item.status !== "Approved") return false;
+
     const price = Number(item.price);
     if (minPrice && price < Number(minPrice)) return false;
     if (maxPrice && price > Number(maxPrice)) return false;

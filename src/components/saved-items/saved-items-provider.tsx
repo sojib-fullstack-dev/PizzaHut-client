@@ -11,8 +11,16 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 import type { MenuItem } from "@/app/components/MenuItemCard";
+import { authClient } from "@/lib/auth-client";
 
+// Purano key (guest login na thakle ei key e save thake)
 const STORAGE_KEY = "pizzahut-saved-items";
+
+// Per-user storage key: login thakle email diye alada key,
+// mane je user save korse shudhu shei user er items dekhte parbe
+function storageKeyFor(email: string) {
+  return email ? `${STORAGE_KEY}:${email}` : STORAGE_KEY;
+}
 
 type SavedItemsContextValue = {
   items: MenuItem[];
@@ -52,26 +60,50 @@ function parseSavedItems(value: string | null): MenuItem[] {
 
 export function SavedItemsProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<MenuItem[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  // Kon key theke load hoise (null = ekhon load hoyni) - isLoaded derive korte
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+
+  // Current logged-in user er email (per-user key banate lage)
+  const { data: session, isPending } = authClient.useSession();
+  const email = session?.user?.email ?? "";
+  const activeKey = storageKeyFor(email);
 
   useEffect(() => {
+    // Session load howa porjonto wait (setState sync na - kaj korbo na)
+    if (isPending) return;
+
     let cancelled = false;
     let storedItems: MenuItem[] = [];
+    const key = storageKeyFor(email);
 
     try {
-      storedItems = parseSavedItems(window.localStorage.getItem(STORAGE_KEY));
+      let raw = window.localStorage.getItem(key);
+
+      // Migration: notun user er key khali + purano shared key e items ache
+      // → sheti ekbar notun user er kore nicche (tara age save korechilo)
+      if (email && !raw) {
+        const legacy = window.localStorage.getItem(STORAGE_KEY);
+        if (legacy) {
+          window.localStorage.setItem(key, legacy);
+          window.localStorage.removeItem(STORAGE_KEY);
+          raw = legacy;
+        }
+      }
+
+      storedItems = parseSavedItems(raw);
     } catch (error) {
       console.error("Could not access saved items in browser storage.", error);
     }
 
+    // Promise diye defer - useEffect er bhitore sync setState na
     void Promise.resolve().then(() => {
       if (cancelled) return;
       setItems(storedItems);
-      setIsLoaded(true);
+      setLoadedKey(key);
     });
 
     const handleStorage = (event: StorageEvent) => {
-      if (event.key === STORAGE_KEY) {
+      if (event.key === key) {
         setItems(parseSavedItems(event.newValue));
       }
     };
@@ -81,7 +113,10 @@ export function SavedItemsProvider({ children }: { children: ReactNode }) {
       cancelled = true;
       window.removeEventListener("storage", handleStorage);
     };
-  }, []);
+  }, [isPending, email]);
+
+  // isLoaded = current user er data asche kina (account switch e purano user er items na dekhay)
+  const isLoaded = loadedKey === activeKey;
 
   const isSaved = useCallback(
     (id: string) => items.some((item) => item._id === id),
@@ -97,14 +132,15 @@ export function SavedItemsProvider({ children }: { children: ReactNode }) {
         : [...items, item];
 
       try {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextItems));
+        // Current user er key e save (per-user)
+        window.localStorage.setItem(activeKey, JSON.stringify(nextItems));
         setItems(nextItems);
       } catch (error) {
         console.error("Could not update saved items in browser storage.", error);
         toast.error("Could not update your saved items.");
       }
     },
-    [isLoaded, isSaved, items]
+    [activeKey, isLoaded, isSaved, items]
   );
 
   const value = useMemo(

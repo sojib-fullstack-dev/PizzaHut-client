@@ -1,12 +1,39 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Bookmark, Pizza } from "lucide-react";
 import { MenuCard } from "@/app/components/MenuCard";
 import { useSavedItems } from "@/components/saved-items/saved-items-provider";
+import { authClient } from "@/lib/auth-client";
 
 export default function SavedItemsPage() {
   const { items, isLoaded } = useSavedItems();
+  const router = useRouter();
+
+  // Login check - session load howa porjonto obak
+  const { data: session, isPending } = authClient.useSession();
+
+  useEffect(() => {
+    // Login nai hole sign-in e pathay (setState na - router navigation)
+    if (!isPending && !session?.user) {
+      router.replace("/sign-in");
+    }
+  }, [isPending, session, router]);
+
+  // Session check / redirect chole jachhe - tokhon loading dekhao
+  if (isPending || !session?.user) {
+    return (
+      <section className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+        <p className="py-16 text-center text-sm font-semibold text-[#a87b62]">
+          Checking your session...
+        </p>
+      </section>
+    );
+  }
+
+  // Logged-in = shudhu nijer save items (provider email diye filter kore)
 
   return (
     <section className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
