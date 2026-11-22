@@ -83,38 +83,41 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* ========== DARK MODE vars (warm PizzaHut cocoa/espresso) ==========
+   Shudhu <html class="dark"> thakle ei value gulo lage.
+   Light mode (:root) e KONO poribarton nei. */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #17100c; /* espresso page bg */
+  --foreground: #f3e7dc; /* warm cream text */
+  --card: #241812;
+  --card-foreground: #f3e7dc;
+  --popover: #241812;
+  --popover-foreground: #f3e7dc;
+  --primary: #a4161a; /* deep crimson (brand) */
+  --primary-foreground: #fff8ee;
+  --secondary: #2e1d14;
+  --secondary-foreground: #f3e7dc;
+  --muted: #2a1c15;
+  --muted-foreground: #cbb3a3;
+  --accent: #2e1d14;
+  --accent-foreground: #f3e7dc;
+  --destructive: #e05a2b;
+  --border: rgba(255, 248, 238, 0.14);
+  --input: rgba(255, 248, 238, 0.18);
+  --ring: #e05a2b;
+  --chart-1: #ea580c;
+  --chart-2: #d97706;
+  --chart-3: #a4161a;
+  --chart-4: #e05a2b;
+  --chart-5: #d8ad96;
+  --sidebar: #241812;
+  --sidebar-foreground: #f3e7dc;
+  --sidebar-primary: #a4161a;
+  --sidebar-primary-foreground: #fff8ee;
+  --sidebar-accent: #2e1d14;
+  --sidebar-accent-foreground: #f3e7dc;
+  --sidebar-border: rgba(255, 248, 238, 0.14);
+  --sidebar-ring: #e05a2b;
 }
 
 @layer base {
@@ -127,4 +130,264 @@
   html {
     @apply font-sans;
   }
+}
+
+/* ==========================================================
+   DARK MODE overrides (challenge part) - v2
+   - <html class="dark"> thakle ei rule gulo kaj kore
+   - Light mode e KONO effect nei (shudhu .dark er niche)
+   - Tailwind utilities er baire likha, tai .dark rule age (win kore)
+   - Brand colors (#a4161a, #ea580c, #d97706) badge/button e ACHEN,
+     segulo change kora hoyni - warm identity royeche
+   ========================================================== */
+
+/* ---------- 1. Page / section backgrounds -> espresso ---------- */
+.dark .bg-\[\#fff8ee\] {
+  background-color: #17100c;
+}
+.dark .bg-\[\#fff8ee\]\/90,
+.dark .bg-\[\#fff8ee\]\/95 {
+  background-color: rgba(23, 16, 12, 0.94); /* navbar header */
+}
+.dark .bg-\[\#fffaf2\] {
+  background-color: #2a1c15;
+}
+.dark .bg-\[\#fffaf2\]\/60 {
+  background-color: rgba(42, 28, 21, 0.75);
+}
+.dark .bg-\[\#fffaf2\]\/95 {
+  background-color: rgba(42, 28, 21, 0.96); /* mobile menu panel */
+}
+.dark .bg-\[\#fffdf9\] {
+  background-color: #1c130e;
+}
+.dark .bg-\[\#f7efe4\] {
+  background-color: #241812;
+}
+.dark .bg-\[\#fff1e6\],
+.dark .bg-\[\#faece6\],
+.dark .bg-\[\#f1dcd4\] {
+  background-color: #2e1d14;
+}
+.dark .bg-\[\#ebdccb\] {
+  background-color: #2a1c15;
+}
+
+/* ---------- 2. White cards / panels / inputs -> dark cocoa ---------- */
+.dark .bg-white {
+  background-color: #241812;
+}
+.dark .bg-white\/90,
+.dark .bg-white\/95 {
+  background-color: #241812;
+}
+.dark .bg-white\/80,
+.dark .bg-white\/85 {
+  background-color: rgba(36, 24, 18, 0.94);
+}
+.dark .bg-white\/70,
+.dark .bg-white\/75 {
+  background-color: rgba(36, 24, 18, 0.82);
+}
+.dark .bg-white\/50,
+.dark .bg-white\/55,
+.dark .bg-white\/60,
+.dark .bg-white\/65 {
+  background-color: rgba(36, 24, 18, 0.72);
+}
+.dark .bg-white\/40 {
+  background-color: rgba(36, 24, 18, 0.6); /* navbar desktop pill */
+}
+
+/* ---------- 3. Focus / hover / peer state (variant = alada class name) ---------- */
+.dark [class*="focus:bg-white"]:focus {
+  background-color: #241812;
+}
+.dark [class*="hover:bg-white"]:hover {
+  background-color: #33241b;
+}
+.dark [class*="hover:bg-[#fffaf2]"]:hover,
+.dark [class*="hover:bg-[#ebdccb]"]:hover,
+.dark [class*="hover:bg-[#faece6]"]:hover,
+.dark [class*="hover:bg-[#f7efe4]"]:hover {
+  background-color: #33241b;
+}
+.dark .peer:checked ~ [class*="peer-checked:bg-[#fff1e6]"] {
+  background-color: #2e1d14;
+}
+
+/* ---------- 4. Text colors: dark brown -> warm cream / bright crimson ---------- */
+.dark .text-\[\#3d211a\],
+.dark .text-\[\#2d1610\] {
+  color: #f3e7dc;
+}
+.dark .text-\[\#a4161a\],
+.dark .text-\[\#8f151b\],
+.dark .text-\[\#8f1116\] {
+  color: #ff8574; /* crimson bright (dark bg e readable) */
+}
+.dark .text-\[\#a87b62\] {
+  color: #c9ab95;
+}
+.dark .text-\[\#7a5645\] {
+  color: #c4a795;
+}
+.dark .text-\[\#b08d79\] {
+  color: #bb9e8b;
+}
+.dark .text-\[\#6f4a3a\] {
+  color: #c7ae9d;
+}
+.dark .text-\[\#5f3b2c\],
+.dark .text-\[\#5a3a2c\] {
+  color: #d3bcaa;
+}
+.dark .text-\[\#8a6553\] {
+  color: #c9ab95;
+}
+.dark .text-\[\#6b4737\],
+.dark .text-\[\#6b4635\] {
+  color: #c9b3a2;
+}
+.dark .text-\[\#b79b8a\] {
+  color: #bda899;
+}
+.dark .text-\[\#d97706\] {
+  color: #fbbf24; /* amber bright */
+}
+.dark .text-\[\#c2410c\],
+.dark .text-\[\#c94a24\] {
+  color: #fb923c;
+}
+.dark .text-\[\#b53b22\] {
+  color: #f97e52;
+}
+.dark [class*="hover:text-[#a4161a]"]:hover {
+  color: #ff8574;
+}
+
+/* ---------- 5. Dim text (opacity variants) ---------- */
+.dark .text-\[\#a4161a\]\/50 {
+  color: rgba(255, 133, 116, 0.75);
+}
+.dark .text-\[\#a4161a\]\/30,
+.dark .text-\[\#a4161a\]\/25 {
+  color: rgba(255, 133, 116, 0.55);
+}
+.dark .text-\[\#a4161a\]\/15 {
+  color: rgba(255, 133, 116, 0.4);
+}
+.dark .text-\[\#a87b62\]\/70,
+.dark .text-\[\#a87b62\]\/60 {
+  color: rgba(201, 171, 149, 0.9);
+}
+
+/* ---------- 6. Placeholder text ---------- */
+.dark .placeholder\:text-\[\#b79b8a\]::placeholder {
+  color: #9d8577;
+}
+.dark .placeholder\:text-\[\#a87b62\]::placeholder {
+  color: #a58b7a;
+}
+.dark .placeholder\:text-\[\#a87b62\]\/70::placeholder {
+  color: rgba(165, 139, 122, 0.9);
+}
+
+/* ---------- 7. Borders: dark brown line -> soft cream line ---------- */
+.dark .border-\[\#8d1b1b\] {
+  border-color: rgba(255, 248, 238, 0.22);
+}
+.dark .border-\[\#8d1b1b\]\/10,
+.dark .border-\[\#8d1b1b\]\/12,
+.dark .border-\[\#8d1b1b\]\/15,
+.dark .border-\[\#8d1b1b\]\/20 {
+  border-color: rgba(255, 248, 238, 0.14);
+}
+.dark .border-\[\#a4161a\] {
+  border-color: rgba(255, 133, 116, 0.55);
+}
+.dark .border-\[\#a4161a\]\/10,
+.dark .border-\[\#a4161a\]\/15,
+.dark .border-\[\#a4161a\]\/20,
+.dark .border-\[\#a4161a\]\/25,
+.dark .border-\[\#a4161a\]\/30,
+.dark .border-\[\#a4161a\]\/40 {
+  border-color: rgba(255, 133, 116, 0.35);
+}
+.dark .border-\[\#3d211a\] {
+  border-color: rgba(255, 248, 238, 0.25);
+}
+.dark .border-\[\#3d211a\]\/10,
+.dark .border-\[\#3d211a\]\/15,
+.dark .border-\[\#3d211a\]\/20 {
+  border-color: rgba(255, 248, 238, 0.14);
+}
+.dark .border-\[\#e6c8be\] {
+  border-color: rgba(255, 248, 238, 0.16);
+}
+.dark [class*="hover:border-[#8d1b1b]"]:hover,
+.dark [class*="hover:border-[#3d211a]"]:hover {
+  border-color: rgba(255, 248, 238, 0.25);
+}
+.dark [class*="hover:border-[#a4161a]"]:hover {
+  border-color: rgba(255, 133, 116, 0.5);
+}
+
+/* ---------- 8. Red/orange tint bg -> slightly stronger on dark ---------- */
+.dark .bg-\[\#a4161a\]\/5 {
+  background-color: rgba(164, 22, 26, 0.22);
+}
+.dark .bg-\[\#a4161a\]\/10 {
+  background-color: rgba(164, 22, 26, 0.28);
+}
+.dark .bg-\[\#a4161a\]\/20 {
+  background-color: rgba(164, 22, 26, 0.35);
+}
+.dark .bg-\[\#8d1b1b\]\/10 {
+  background-color: rgba(141, 27, 27, 0.32);
+}
+.dark .bg-\[\#ea580c\]\/10 {
+  background-color: rgba(234, 88, 12, 0.24);
+}
+.dark .bg-\[\#ea580c\]\/15,
+.dark .bg-\[\#ea580c\]\/20 {
+  background-color: rgba(234, 88, 12, 0.32);
+}
+.dark .bg-\[\#f59e0b\]\/10 {
+  background-color: rgba(245, 158, 11, 0.22);
+}
+.dark .bg-\[\#f59e0b\]\/15 {
+  background-color: rgba(245, 158, 11, 0.28);
+}
+.dark [class*="hover:bg-[#a4161a]/10"]:hover {
+  background-color: rgba(164, 22, 26, 0.35);
+}
+.dark [class*="hover:bg-[#a4161a]/5"]:hover {
+  background-color: rgba(164, 22, 26, 0.3);
+}
+
+/* ---------- 9. Focus rings + ring offset (dark e visible) ---------- */
+.dark [class*="ring-[#a4161a]"] {
+  --tw-ring-color: rgba(255, 133, 116, 0.5);
+}
+.dark [class*="ring-[#a4161a]/10"],
+.dark [class*="ring-[#a4161a]/15"],
+.dark [class*="ring-[#a4161a]/20"] {
+  --tw-ring-color: rgba(255, 133, 116, 0.35);
+}
+.dark [class*="ring-[#a4161a]/40"],
+.dark [class*="ring-[#a4161a]/50"] {
+  --tw-ring-color: rgba(255, 133, 116, 0.65);
+}
+.dark .ring-offset-\[\#fff8ee\],
+.dark .ring-offset-white {
+  --tw-ring-offset-color: #17100c;
+}
+
+/* ---------- 10. Gradient sections (light cream -> dark) ----------
+   Brand gradient buttons (to-r/to-br from-[#a4161a]...) touch hoyni */
+.dark .bg-gradient-to-b.from-\[\#fffaf2\],
+.dark .bg-gradient-to-b.from-\[\#fffdf9\] {
+  background-image: none;
+  background-color: #1c130e;
 }

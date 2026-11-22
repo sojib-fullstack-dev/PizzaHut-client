@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { authClient } from '@/lib/auth-client';
 import { useSavedItems } from '@/components/saved-items/saved-items-provider';
 import { ProfileDropdown } from './profile-dropdown';
+import { ThemeToggle } from '@/app/components/ThemeToggle';
 
 function getDashboardHref(role: string | null | undefined) {
   const dashboardRole =
@@ -492,6 +493,9 @@ export function Navbar() {
           />
 
           <div className="flex items-center gap-0.5 sm:gap-1">
+            {/* Dark/Light theme toggle (localStorage + html.dark class) */}
+            <ThemeToggle />
+
             <SavedItemsButton onNavigate={closeMenu} />
 
             <span

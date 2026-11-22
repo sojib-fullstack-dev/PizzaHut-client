@@ -31,8 +31,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      // dark class script diye add hoy, tai hydration warning na (suppress)
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Dark mode: paint er age localStorage theke purano theme apply (flash na) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();",
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-background text-foreground">
         <SavedItemsProvider>
           {/* Session er sathe JWT token sync (login e naoya, logout e clear) */}

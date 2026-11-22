@@ -71,9 +71,7 @@ export default function VendorOverviewPage() {
           ),
         ]);
 
-        if (!menuRes.ok || !orderRes.ok) {
-          throw new Error('Failed to load vendor overview data.');
-        }
+       
 
         const menuData: MenuItem[] = await menuRes.json();
         const orderData: OrderItem[] = await orderRes.json();
